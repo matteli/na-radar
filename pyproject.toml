@@ -6,7 +6,7 @@ license = "MIT"
 authors = ["matteli <matthieu.nue@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 FlightRadarAPI = "^1.2.1"
 dash = "^2.6.1"
 pandas = "^1.4.3"
