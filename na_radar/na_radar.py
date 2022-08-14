@@ -8,9 +8,9 @@ from __init__ import __version__
 
 na_airport = "47.3,47,-1.7,-1.5"
 delay_dead = 600  # time in second without information for untrack plane
-start_curfew = datetime.time(15, 5)
+start_curfew = datetime.time(0, 0)
 end_curfew = datetime.time(6, 0)
-middle_curfew = datetime.time(22, 0)
+middle_curfew = datetime.time(3, 0)
 fr_api = FlightRadar24API()
 logging.basicConfig(filename="flights.log", encoding="utf-8", level=logging.INFO)
 connection = sqlite3.connect("naflight.db")
