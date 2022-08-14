@@ -4,14 +4,31 @@
   // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
-      "name": "Python : fichier actif",
+      "name": "NA-Radar detect",
       "type": "python",
       "request": "launch",
-      "program": "${file}",
+      "program": "/home/matthieu/Dev/na-radar/na_radar/na_radar.py",
       "console": "integratedTerminal",
       "justMyCode": true,
       "args": []
-    }
+    },
+    {
+      "name": "NA-Radar visualize",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "env": {
+          "FLASK_APP": "na_visualize.na_visualize.py",
+          "FLASK_ENV": "development",
+          "FLASK_DEBUG": "1"
+      },
+      "args": [
+          "run",
+          "--no-debugger",
+          //"--no-reload"
+      ],
+    },
   ]
 }

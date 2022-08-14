@@ -121,7 +121,7 @@ class NAFlight:
             destination_airport = code_iata.iata_2_name(self.destination_airport_iata)
 
             if curfew:
-                sql = f"INSERT INTO flights VALUES ('{self.registration}', '{airline}', {self.operation}, '{origin_airport}', '{destination_airport}', {self.time}, {self.time_on_ground}, {self.time_in_flight}, 1);"
+                sql = f'INSERT INTO flights VALUES ("{self.registration}", "{airline}", {self.operation}, "{origin_airport}", "{destination_airport}", {self.time}, {self.time_on_ground}, {self.time_in_flight}, 1);'
                 cursor.execute(sql)
                 connection.commit()
                 # logging.info(
@@ -129,7 +129,7 @@ class NAFlight:
                     f"L'avion {self.registration} de la compagnie {airline} qui a {'décollé' if self.operation==0 else 'atteri'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} est hors délai."
                 )
             else:
-                sql = f"INSERT INTO flights VALUES ('{self.registration}', '{airline}', {self.operation}, '{origin_airport}', '{destination_airport}', {self.time}, {self.time_on_ground}, {self.time_in_flight}, 0);"
+                sql = f'INSERT INTO flights VALUES ("{self.registration}", "{airline}", {self.operation}, "{origin_airport}", "{destination_airport}", {self.time}, {self.time_on_ground}, {self.time_in_flight}, 0);'
                 cursor.execute(sql)
                 connection.commit()
                 # logging.info(
