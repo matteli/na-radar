@@ -1,3 +1,3 @@
 na-radar
 
-Detect plane on Nantes-Atlantique Airport
+Detect planes on Nantes-Atlantique Airport

@@ -1,13 +1,15 @@
 [tool.poetry]
 name = "na-radar"
 version = "0.1.0"
-description = "Detect plane which take off or land at Nantes-Atlantique airport"
+description = "Detect planes which take off or land at Nantes-Atlantique airport"
 license = "MIT"
 authors = ["matteli <matthieu.nue@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 FlightRadarAPI = "^1.2.1"
+dash = "^2.6.1"
+pandas = "^1.4.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

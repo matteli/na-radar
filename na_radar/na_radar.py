@@ -1,11 +1,9 @@
-from xml.dom import registerDOMImplementation
 from FlightRadar24.api import FlightRadar24API
 import datetime
 from time import sleep
 import sqlite3
 import argparse
 import logging
-from collections import defaultdict
 from __init__ import __version__
 
 na_airport = "47.3,47,-1.7,-1.5"
@@ -18,24 +16,40 @@ logging.basicConfig(filename="flights.log", encoding="utf-8", level=logging.INFO
 connection = sqlite3.connect("naflight.db")
 cursor = connection.cursor()
 
-airlines_iata = {}
 
+class CodeIATA:
+    def __init__(self):
+        self.codes_iata_fr = []
+        self.codes_iata = {}
+        self.get_codes_iata_fr()
 
-def is_curfew_is_start(epoch_time):
-    time = datetime.datetime.fromtimestamp(epoch_time).time()
-    if start_curfew < end_curfew:  # start curfew is after 00:00
-        if time > start_curfew and time < end_curfew:
-            if time < middle_curfew:
-                return True, True
-            return True, False
-    else:  # start curfew is before 00:00
-        if time > start_curfew or time < end_curfew:
-            if time < middle_curfew or (
-                middle_curfew > datetime.time(0, 0) and time > start_curfew
-            ):
-                return True, True
-            return True, False
-    return False, False
+    def get_codes_iata_fr(self):
+        try:
+            self.codes_iata_fr += fr_api.get_airlines()
+            self.codes_iata_fr += fr_api.get_airports()
+            return True
+        except:
+            return False
+
+    def iata_2_name(self, code_iata):
+        try:
+            name = self.codes_iata[code_iata]
+        except KeyError:
+            if not self.codes_iata_fr:
+                self.get_codes_iata_fr()
+            name = code_iata
+            for code_iata_fr in self.codes_iata_fr:
+                try:
+                    if code_iata_fr["Code"] == code_iata:
+                        self.codes_iata[code_iata] = code_iata_fr["Name"]
+                        name = code_iata_fr["Name"]
+                        break
+                except KeyError:
+                    if code_iata_fr["iata"] == code_iata:
+                        self.codes_iata[code_iata] = code_iata_fr["name"]
+                        name = code_iata_fr["name"]
+                        break
+        return name
 
 
 class NAFlight:
@@ -57,7 +71,23 @@ class NAFlight:
         self.origin_airport_iata = origin_airport_iata
         self.destination_airport_iata = destination_airport_iata
 
-    def check(self, status, time):
+    def is_curfew_is_start(self, epoch_time):
+        time = datetime.datetime.fromtimestamp(epoch_time).time()
+        if start_curfew < end_curfew:  # start curfew is after 00:00
+            if time > start_curfew and time < end_curfew:
+                if time < middle_curfew:
+                    return True, True
+                return True, False
+        else:  # start curfew is before 00:00
+            if time > start_curfew or time < end_curfew:
+                if time < middle_curfew or (
+                    middle_curfew > datetime.time(0, 0) and time > start_curfew
+                ):
+                    return True, True
+                return True, False
+        return False, False
+
+    def check(self, status, time, code_iata):
         if status != 0 and status != 1:
             self.tracked = False
             return False
@@ -67,7 +97,7 @@ class NAFlight:
             return False
 
         if status != self.last_status:
-            curfew, start_curfew = is_curfew_is_start(time)
+            curfew, start_curfew = self.is_curfew_is_start(time)
             self.last_status = status
             self.tracked = False
             if status == 0:  # plane take off from NA
@@ -84,34 +114,26 @@ class NAFlight:
                 if start_curfew or not curfew:
                     self.time = time
 
-            curfew, start_curfew = is_curfew_is_start(self.time)
+            curfew, start_curfew = self.is_curfew_is_start(self.time)
 
-            try:
-                airline = airlines_iata[self.airline_iata]
-            except KeyError:
-                if "airlines_fr" not in locals():
-                    airlines_fr = fr_api.get_airlines()
-                airline = "inconnue"
-                for airline_fr in airlines_fr:
-                    if airline_fr["Code"] == self.airline_iata:
-                        airlines_iata[self.airline_iata] = airline_fr["Name"]
-                        airline = airline_fr["Name"]
-                        break
+            airline = code_iata.iata_2_name(self.airline_iata)
+            origin_airport = code_iata.iata_2_name(self.origin_airport_iata)
+            destination_airport = code_iata.iata_2_name(self.destination_airport_iata)
 
             if curfew:
-                sql = f"INSERT INTO flights VALUES ('{self.registration}', '{self.airline_iata}', {self.operation}, '{self.origin_airport_iata}', '{self.destination_airport_iata}', {self.time},{self.time_on_ground}, {self.time_in_flight}, 1);"
+                sql = f"INSERT INTO flights VALUES ('{self.registration}', '{airline}', {self.operation}, '{origin_airport}', '{destination_airport}', {self.time}, {self.time_on_ground}, {self.time_in_flight}, 1);"
                 cursor.execute(sql)
                 connection.commit()
-                logging.info(
-                    # print(
+                # logging.info(
+                print(
                     f"L'avion {self.registration} de la compagnie {airline} qui a {'décollé' if self.operation==0 else 'atteri'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} est hors délai."
                 )
             else:
-                sql = f"INSERT INTO flights VALUES ('{self.registration}', '{self.airline_iata}', {self.operation}, '{self.origin_airport_iata}', '{self.destination_airport_iata}', {self.time},{self.time_on_ground}, {self.time_in_flight}, 0);"
+                sql = f"INSERT INTO flights VALUES ('{self.registration}', '{airline}', {self.operation}, '{origin_airport}', '{destination_airport}', {self.time}, {self.time_on_ground}, {self.time_in_flight}, 0);"
                 cursor.execute(sql)
                 connection.commit()
-                logging.info(
-                    # print(
+                # logging.info(
+                print(
                     f"L'avion {self.registration} de la compagnie {airline} qui a {'décollé' if self.operation==0 else 'atteri'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} est ok."
                 )
 
@@ -120,43 +142,43 @@ class NAFlight:
         return
 
 
-def main(what):
-    if what == "detect":
-        sql = "CREATE TABLE IF NOT EXISTS flights (registration TEXT, airline_iata TEXT, operation INTEGER, origin_airport_iata TEXT, destination_airport_iata TEXT, time INTEGER, time_on_ground INTEGER, time_in_flight INTEGER, curfew INTEGER);"
-        cursor.execute(sql)
-        connection.commit()
+def main():
+    sql = "CREATE TABLE IF NOT EXISTS flights (registration TEXT, airline TEXT, operation INTEGER, origin_airport_iata TEXT, destination_airport_iata TEXT, time INTEGER, time_on_ground INTEGER, time_in_flight INTEGER, curfew INTEGER);"
+    cursor.execute(sql)
+    connection.commit()
+    code_iata = CodeIATA()
 
-        na_flights = {}
-        while True:
+    na_flights = {}
+    while True:
+        try:
             flights = fr_api.get_flights(None, na_airport)
-            for flight in flights:
-                if flight.id in list(na_flights.keys()):
-                    if na_flights[flight.id].tracked:
-                        na_flights[flight.id].check(
-                            flight.on_ground,
-                            flight.time,
-                        )
-                else:
-                    na_flights[flight.id] = NAFlight(
-                        flight.registration,
-                        flight.airline_iata,
-                        flight.origin_airport_iata,
-                        flight.destination_airport_iata,
-                        flight.on_ground,
-                        flight.time,
-                    )
+        except:
+            flights = []
 
-            sleep(10)
-    elif what == "get":
-        pass
+        for flight in flights:
+            if flight.id in list(na_flights.keys()):
+                if na_flights[flight.id].tracked:
+                    na_flights[flight.id].check(
+                        flight.on_ground, flight.time, code_iata
+                    )
+            else:
+                na_flights[flight.id] = NAFlight(
+                    flight.registration,
+                    flight.airline_iata,
+                    flight.origin_airport_iata,
+                    flight.destination_airport_iata,
+                    flight.on_ground,
+                    flight.time,
+                )
+
+        sleep(10)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="na-radar", description="Count and detecte planes at na airport"
     )
-    parser.add_argument("what", choices=["detect", "get"], help="detect or get")
     parser.add_argument("-v", "--version", action="version", version=__version__)
 
     args = parser.parse_args()
-    main(what=args.what)
+    main()
