@@ -4,11 +4,11 @@ import pandas as pd
 import sqlite3
 import datetime
 
-START_DATE = datetime.date(2022, 8, 15)
+START_DATE = datetime.date(2022, 8, 16)
 
 app = Dash(__name__, title="NA-Radar")
 application = app.server
-colors = ["DarkGreen", "DarkBlue", "DarkOrange", "DarkRed"]
+colors = ["DarkGreen", "DarkBlue", "DarkRed", "DarkOrange"]
 
 app.layout = html.Div(
     children=[
@@ -50,9 +50,14 @@ def update_graph(n, start_date, end_date):
 
     connection = sqlite3.connect("naflight.db")
     cursor = connection.cursor()
-    sql = f"SELECT airline, operation, curfew, count(airline) as airline_count \
+    sql = f"SELECT airline, COUNT(airline) AS airline_count, \
+        SUM(CASE WHEN (operation = 0 AND curfew = 0) THEN 1 ELSE 0 END) AS takeoff, \
+        SUM(CASE WHEN (operation = 1 AND curfew = 0) THEN 1 ELSE 0 END) AS landing, \
+        SUM(CASE WHEN (operation = 0 AND curfew = 1) THEN 1 ELSE 0 END) AS takeoff_curfew, \
+        SUM(CASE WHEN (operation = 1 AND curfew = 1) THEN 1 ELSE 0 END) AS landing_curfew \
         FROM flights WHERE time>{start_time} AND time<{end_time} \
-        GROUP BY airline, operation, curfew ORDER BY airline_count DESC;"
+        GROUP BY airline ORDER BY airline_count DESC;"
+
     cursor.execute(sql)
     rows = cursor.fetchall()
     connection.close()
@@ -63,34 +68,18 @@ def update_graph(n, start_date, end_date):
     airlines_index = {}
 
     for row in rows:
-        if not row[0] in airlines:
-            airlines.append(row[0])
-            airlines.append(row[0])
-            airlines.append(row[0])
-            airlines.append(row[0])
-            opes.append("Décollage")
-            opes.append("Atterrissage")
-            opes.append("Décollage couvre-feu")
-            opes.append("Atterrissage couvre-feu")
-            amount.append(0)
-            amount.append(0)
-            amount.append(0)
-            amount.append(0)
-            airlines_index[row[0]] = len(airlines) - 4
-        if row[2] == 0:
-            if row[1] == 0:
-                # take off no curfew
-                amount[airlines_index[row[0]]] = row[3]
-            else:
-                # landing no curfew
-                amount[airlines_index[row[0]] + 1] = row[3]
-        else:
-            if row[1] == 0:
-                # take off curfew
-                amount[airlines_index[row[0]] + 2] = row[3]
-            else:
-                # landing curfew
-                amount[airlines_index[row[0]] + 3] = row[3]
+        airlines.append(row[0])
+        airlines.append(row[0])
+        airlines.append(row[0])
+        airlines.append(row[0])
+        opes.append("Décollage")
+        opes.append("Atterrissage")
+        opes.append("Décollage couvre-feu")
+        opes.append("Atterrissage couvre-feu")
+        amount.append(row[2])
+        amount.append(row[3])
+        amount.append(row[4])
+        amount.append(row[5])
 
     df = pd.DataFrame({"Compagnies": airlines, "Nombre": amount, "Mouvement": opes})
 

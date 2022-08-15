@@ -6,7 +6,7 @@
   "configurations": [
 
     {
-      "name": "NA-Radar detect",
+      "name": "NA-Radar",
       "type": "python",
       "request": "launch",
       "program": "/home/matthieu/Dev/na-radar/na_radar/na_radar.py",
@@ -15,7 +15,7 @@
       "args": []
     },
     {
-      "name": "NA-Radar visualize",
+      "name": "NA-Visualize",
       "type": "python",
       "request": "launch",
       "module": "flask",
