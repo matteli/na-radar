@@ -8,6 +8,7 @@ START_DATE = datetime.date(2022, 8, 15)
 
 app = Dash(__name__, title="NA-Radar")
 application = app.server
+colors = ["DarkGreen", "DarkBlue", "DarkOrange", "DarkRed"]
 
 app.layout = html.Div(
     children=[
@@ -20,9 +21,7 @@ app.layout = html.Div(
         dcc.DatePickerRange(
             id="date-pick",
             min_date_allowed=START_DATE,
-            # max_date_allowed=datetime.datetime.today(),
             start_date=START_DATE,
-            # end_date=datetime.datetime.today(),
             display_format="DD/MM/YY",
             start_date_placeholder_text="DD/MM/YY",
         ),
@@ -99,7 +98,9 @@ def update_graph(n, start_date, end_date):
         color="Mouvement",
         text_auto=True,
         height=600,
+        color_discrete_sequence=colors,
     )
+
     return fig
 
 
