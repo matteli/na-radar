@@ -4,7 +4,7 @@ import pandas as pd
 import sqlite3
 import datetime
 
-START_DATE = datetime.date(2022, 8, 10)
+START_DATE = datetime.date(2022, 8, 15)
 
 app = Dash(__name__, title="NA-Radar")
 application = app.server
@@ -20,9 +20,9 @@ app.layout = html.Div(
         dcc.DatePickerRange(
             id="date-pick",
             min_date_allowed=START_DATE,
-            max_date_allowed=datetime.datetime.today(),
+            # max_date_allowed=datetime.datetime.today(),
             start_date=START_DATE,
-            end_date=datetime.datetime.today(),
+            # end_date=datetime.datetime.today(),
             display_format="DD/MM/YY",
             start_date_placeholder_text="DD/MM/YY",
         ),
@@ -44,17 +44,22 @@ app.layout = html.Div(
 )
 def update_graph(n, start_date, end_date):
     start_time = int(datetime.datetime.fromisoformat(start_date).timestamp())
-    end_time = int(datetime.datetime.fromisoformat(end_date).timestamp())
+    if end_date:
+        end_time = int(datetime.datetime.fromisoformat(end_date).timestamp())
+    else:
+        end_time = 0
     connection = sqlite3.connect("naflight.db")
     cursor = connection.cursor()
-    sql = f"SELECT * FROM flights WHERE time>{start_time} AND time<{end_time}"
+    if end_time:
+        sql = f"SELECT * FROM flights WHERE time>{start_time} AND time<{end_time}"
+    else:
+        sql = f"SELECT * FROM flights WHERE time>{start_time}"
     cursor.execute(sql)
     rows = cursor.fetchall()
     connection.close()
 
     airlines = []
     amount = []
-    total = 0
     opes = []
 
     for row in rows:
@@ -84,12 +89,16 @@ def update_graph(n, start_date, end_date):
             if ope == 1:  # landing
                 i = airlines.index(row[1], i + 1)
         amount[i] += 1
-        total += 1
 
     df = pd.DataFrame({"Compagnies": airlines, "Nombre": amount, "Mouvement": opes})
 
     fig = px.bar(
-        df, x="Compagnies", y="Nombre", color="Mouvement", text_auto=True, height=600
+        df,
+        x="Compagnies",
+        y="Nombre",
+        color="Mouvement",
+        text_auto=True,
+        height=600,
     )
     return fig
 

@@ -12,7 +12,7 @@ start_curfew = datetime.time(0, 0)
 end_curfew = datetime.time(6, 0)
 middle_curfew = datetime.time(3, 0)
 fr_api = FlightRadar24API()
-logging.basicConfig(filename="flights.log", encoding="utf-8", level=logging.INFO)
+logging.basicConfig(filename="flights.log", encoding="utf-8", level=logging.DEBUG)
 connection = sqlite3.connect("naflight.db")
 cursor = connection.cursor()
 
@@ -124,16 +124,16 @@ class NAFlight:
                 sql = f'INSERT INTO flights VALUES ("{self.registration}", "{airline}", {self.operation}, "{origin_airport}", "{destination_airport}", {self.time}, {self.time_on_ground}, {self.time_in_flight}, 1);'
                 cursor.execute(sql)
                 connection.commit()
-                # logging.info(
-                print(
+                logging.info(
+                    # print(
                     f"L'avion {self.registration} de la compagnie {airline} qui a {'décollé' if self.operation==0 else 'atteri'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} est hors délai."
                 )
             else:
                 sql = f'INSERT INTO flights VALUES ("{self.registration}", "{airline}", {self.operation}, "{origin_airport}", "{destination_airport}", {self.time}, {self.time_on_ground}, {self.time_in_flight}, 0);'
                 cursor.execute(sql)
                 connection.commit()
-                # logging.info(
-                print(
+                logging.info(
+                    # print(
                     f"L'avion {self.registration} de la compagnie {airline} qui a {'décollé' if self.operation==0 else 'atteri'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} est ok."
                 )
 
