@@ -134,9 +134,12 @@ def main():
                             )
                         else:
                             try:
-                                airline_name = flight_detail["airline"]["name"]
+                                airline_name = flight_detail["airline"]["short"]
                             except:
-                                airline_name = "N/A"
+                                try:
+                                    airline_name = flight_detail["airline"]["name"]
+                                except:
+                                    airline_name = "N/A"
                             try:
                                 airport_origin = flight_detail["airport"]["origin"][
                                     "name"
