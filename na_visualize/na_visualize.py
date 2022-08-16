@@ -51,10 +51,10 @@ def update_graph(n, start_date, end_date):
     connection = sqlite3.connect("naflight.db")
     cursor = connection.cursor()
     sql = f"SELECT airline, COUNT(airline) AS airline_count, \
-        SUM(CASE WHEN (operation = 0 AND curfew = 0) THEN 1 ELSE 0 END) AS takeoff, \
-        SUM(CASE WHEN (operation = 1 AND curfew = 0) THEN 1 ELSE 0 END) AS landing, \
-        SUM(CASE WHEN (operation = 0 AND curfew = 1) THEN 1 ELSE 0 END) AS takeoff_curfew, \
-        SUM(CASE WHEN (operation = 1 AND curfew = 1) THEN 1 ELSE 0 END) AS landing_curfew \
+        SUM(NOT(operation OR curfew)) AS takeoff, \
+        SUM(operation AND NOT curfew) AS landing, \
+        SUM(NOT operation AND curfew) AS takeoff_curfew, \
+        SUM(operation AND curfew) AS landing_curfew \
         FROM flights WHERE time>{start_time} AND time<{end_time} \
         GROUP BY airline ORDER BY airline_count DESC;"
 
@@ -65,7 +65,6 @@ def update_graph(n, start_date, end_date):
     airlines = []
     amount = []
     opes = []
-    airlines_index = {}
 
     for row in rows:
         airlines.append(row[0])
