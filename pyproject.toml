@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "na-radar"
+name = "NA-Radar"
 version = "0.1.0"
-description = "Detect planes which take off or land at Nantes-Atlantique airport"
+description = "Detect aircraft mouvements at Nantes-Atlantique Airport"
 license = "MIT"
 authors = ["matteli <matthieu.nue@gmail.com>"]
 
