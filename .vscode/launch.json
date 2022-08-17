@@ -4,7 +4,6 @@
   // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
     {
       "name": "NA-Radar",
       "type": "python",
@@ -20,14 +19,14 @@
       "request": "launch",
       "module": "flask",
       "env": {
-          "FLASK_APP": "na_visualize.na_visualize.py",
-          "FLASK_ENV": "development",
-          "FLASK_DEBUG": "1"
+        "FLASK_APP": "na_visualize.na_visualize.py",
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "1"
       },
       "args": [
-          "run",
-          "--no-debugger",
-          //"--no-reload"
+        "run",
+        "--no-debugger",
+        //"--no-reload"
       ],
     },
   ]

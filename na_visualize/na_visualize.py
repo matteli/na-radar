@@ -13,11 +13,12 @@ colors = ["DarkGreen", "DarkBlue", "DarkRed", "DarkOrange"]
 app.layout = html.Div(
     children=[
         html.H1(children="NA-Radar"),
-        html.Section(
+        html.H3(
             children=f"""
         Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique.
     """
         ),
+        html.Br(),
         dcc.DatePickerRange(
             id="date-pick",
             min_date_allowed=START_DATE,
@@ -31,7 +32,7 @@ app.layout = html.Div(
             interval=60 * 1000,  # in milliseconds
             n_intervals=0,
         ),
-    ]
+    ],
 )
 
 
@@ -48,15 +49,15 @@ def update_graph(n, start_date, end_date):
     else:
         end_time = int(datetime.datetime.today().timestamp()) + 100000
 
-    connection = sqlite3.connect("naflight.db")
+    connection = sqlite3.connect("naflights.db")
     cursor = connection.cursor()
     sql = f"SELECT airline, COUNT(airline) AS airline_count, \
-        SUM(NOT(operation OR curfew)) AS takeoff, \
-        SUM(operation AND NOT curfew) AS landing, \
-        SUM(NOT operation AND curfew) AS takeoff_curfew, \
-        SUM(operation AND curfew) AS landing_curfew \
+        SUM(NOT(landing OR curfew)) AS takeoff, \
+        SUM(landing AND NOT curfew) AS landing, \
+        SUM(NOT landing AND curfew) AS takeoff_curfew, \
+        SUM(landing AND curfew) AS landing_curfew \
         FROM flights WHERE time>{start_time} AND time<{end_time} \
-        GROUP BY airline ORDER BY airline_count DESC;"
+        GROUP BY airline ORDER BY airline_count DESC LIMIT 10;"
 
     cursor.execute(sql)
     rows = cursor.fetchall()

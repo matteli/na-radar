@@ -12,7 +12,7 @@ DELAY_DEAD = 600  # time in second without information for untrack plane
 START_CURFEW = datetime.time(0, 0)
 END_CURFEW = datetime.time(6, 0)
 MIDDLE_CURFEW = datetime.time(3, 0)
-CONNECTION = sqlite3.connect("naflight.db")
+CONNECTION = sqlite3.connect("naflights.db")
 CURSOR = CONNECTION.cursor()
 
 
@@ -104,9 +104,9 @@ class NAFlight:
             sql = f'INSERT INTO flights VALUES ("{self.registration}", "{self.airline}", {landing}, "{self.origin_airport}", "{self.destination_airport}", {self.time}, {time_on_ground}, {time_in_flight}, {curfew}, {north_fly});'
             CURSOR.execute(sql)
             CONNECTION.commit()
-            # logging.info(
-            print(
-                f"L'avion {self.registration} de la compagnie {self.airline} a {'atteri' if landing else 'décollé'} côté {'nord' if north_fly else 'sud'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} {'pendant le' if curfew else 'hors du'} couvre-feu."
+            logging.info(
+                # print(
+                f"L'avion {self.registration} de la compagnie {self.airline} a {'atteri' if landing else 'décollé'} côté {'nord' if north_fly else 'sud'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')}{' pendant le couvre-feu.' if curfew else '.'}"
             )
 
             return False
@@ -191,9 +191,11 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog="na-radar", description="Detect planes at NA airport"
+        prog="NA-Radar", description="Detect planes at NA airport"
     )
-    parser.add_argument("-v", "--version", action="version", version=__version__)
+    parser.add_argument(
+        "-v", "--version", action="version", version="%(prog)s " + __version__
+    )
 
     args = parser.parse_args()
     main()
