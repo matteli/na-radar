@@ -6,15 +6,14 @@ import argparse
 import logging
 from __init__ import __version__
 
-na_airport = "47.3,47,-1.7,-1.5"
-delay_dead = 600  # time in second without information for untrack plane
-start_curfew = datetime.time(0, 0)
-end_curfew = datetime.time(6, 0)
-middle_curfew = datetime.time(3, 0)
-fr_api = FlightRadar24API()
-logging.basicConfig(filename="flights.log", encoding="utf-8", level=logging.INFO)
-connection = sqlite3.connect("naflight.db")
-cursor = connection.cursor()
+NA_AIRPORT_ZONE = "47.3,47,-1.7,-1.5"
+TRACK_ANGLE_LIMITS = (197, 117)
+DELAY_DEAD = 600  # time in second without information for untrack plane
+START_CURFEW = datetime.time(0, 0)
+END_CURFEW = datetime.time(6, 0)
+MIDDLE_CURFEW = datetime.time(3, 0)
+CONNECTION = sqlite3.connect("naflight.db")
+CURSOR = CONNECTION.cursor()
 
 
 class NAFlight:
@@ -24,100 +23,123 @@ class NAFlight:
         airline,
         origin_airport,
         destination_airport,
-        status,
+        on_ground,
+        heading,
         time,
     ):
         self.registration = registration
-        self.last_status = status  # 0 : inflight, 1 : onground
+        self.on_ground = on_ground
+        self.heading = heading
         self.time = time
         self.airline = airline
         self.origin_airport = origin_airport
         self.destination_airport = destination_airport
 
-    def is_curfew_is_start(self, epoch_time):
+    def is_curfew_is_begin(self, epoch_time):
         time = datetime.datetime.fromtimestamp(epoch_time).time()
-        if start_curfew < end_curfew:  # start curfew is after 00:00
-            if time > start_curfew and time < end_curfew:
-                if time < middle_curfew:
+        if START_CURFEW < END_CURFEW:  # start curfew is after 00:00
+            if time > START_CURFEW and time < END_CURFEW:
+                if time < MIDDLE_CURFEW:
                     return True, True
                 return True, False
         else:  # start curfew is before 00:00
-            if time > start_curfew or time < end_curfew:
-                if time < middle_curfew or (
-                    middle_curfew > datetime.time(0, 0) and time > start_curfew
+            if time > START_CURFEW or time < END_CURFEW:
+                if time < MIDDLE_CURFEW or (
+                    MIDDLE_CURFEW > datetime.time(0, 0) and time > START_CURFEW
                 ):
                     return True, True
                 return True, False
         return False, False
 
-    def check(self, status, time):
-        if status != 0 and status != 1:
+    def get_curfew(self, epoch_time):
+        time = datetime.datetime.fromtimestamp(epoch_time).time()
+        if START_CURFEW < END_CURFEW:  # start curfew is after 00:00
+            if time > START_CURFEW and time < END_CURFEW:
+                return 1
+        else:
+            if time > START_CURFEW or time < END_CURFEW:
+                return 1
+        return 0
+
+    def get_north_fly(self, heading, landing):
+        if heading > TRACK_ANGLE_LIMITS[0] or heading < TRACK_ANGLE_LIMITS[1]:
+            if landing:
+                return 0
+            else:
+                return 1
+        else:
+            if landing:
+                return 1
+            else:
+                return 0
+
+    def check(self, on_ground, time, heading):
+        if on_ground != 0 and on_ground != 1:
             return False
 
-        if time - self.time > delay_dead:
+        if time - self.time > DELAY_DEAD:
             return False
 
-        if status != self.last_status:
-            curfew, start_curfew = self.is_curfew_is_start(time)
-            self.last_status = status
-            if status == 0:  # plane take off from NA
-                self.operation = 0
-                self.time_on_ground = self.time
-                self.time_in_flight = time
-                if not start_curfew or not curfew:
+        if on_ground != self.on_ground:
+            time_curfew, begin_curfew = self.is_curfew_is_begin(time)
+            self.on_ground = on_ground
+            if on_ground == 0:  # plane take off from NA
+                landing = 0
+                north_fly = self.get_north_fly(self.heading, landing)
+                time_on_ground = self.time
+                time_in_flight = time
+                if not begin_curfew or not time_curfew:
                     self.time = time
 
             else:  # plane land at NA
-                self.operation = 1
-                self.time_in_flight = self.time
-                self.time_on_ground = time
-                if start_curfew or not curfew:
+                landing = 1
+                north_fly = self.get_north_fly(heading, landing)
+                time_in_flight = self.time
+                time_on_ground = time
+                if begin_curfew or not time_curfew:
                     self.time = time
 
-            curfew, start_curfew = self.is_curfew_is_start(self.time)
+            curfew = self.get_curfew(self.time)
 
-            if curfew:
-                sql = f'INSERT INTO flights VALUES ("{self.registration}", "{self.airline}", {self.operation}, "{self.origin_airport}", "{self.destination_airport}", {self.time}, {self.time_on_ground}, {self.time_in_flight}, 1);'
-                cursor.execute(sql)
-                connection.commit()
-                logging.info(
-                    # print(
-                    f"L'avion {self.registration} de la compagnie {self.airline} qui a {'décollé' if self.operation==0 else 'atteri'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} est hors délai."
-                )
-            else:
-                sql = f'INSERT INTO flights VALUES ("{self.registration}", "{self.airline}", {self.operation}, "{self.origin_airport}", "{self.destination_airport}", {self.time}, {self.time_on_ground}, {self.time_in_flight}, 0);'
-                cursor.execute(sql)
-                connection.commit()
-                logging.info(
-                    # print(
-                    f"L'avion {self.registration} de la compagnie {self.airline} qui a {'décollé' if self.operation==0 else 'atteri'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} est ok."
-                )
+            sql = f'INSERT INTO flights VALUES ("{self.registration}", "{self.airline}", {landing}, "{self.origin_airport}", "{self.destination_airport}", {self.time}, {time_on_ground}, {time_in_flight}, {curfew}, {north_fly});'
+            CURSOR.execute(sql)
+            CONNECTION.commit()
+            # logging.info(
+            print(
+                f"L'avion {self.registration} de la compagnie {self.airline} a {'atteri' if landing else 'décollé'} côté {'nord' if north_fly else 'sud'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')} {'pendant le' if curfew else 'hors du'} couvre-feu."
+            )
+
             return False
 
         self.time = time
+        self.heading = heading
         return True
 
 
 def main():
-    sql = "CREATE TABLE IF NOT EXISTS flights (registration TEXT, airline TEXT, operation INTEGER, origin_airport TEXT, destination_airport TEXT, time INTEGER, time_on_ground INTEGER, time_in_flight INTEGER, curfew INTEGER);"
-    cursor.execute(sql)
-    connection.commit()
+    logging.basicConfig(filename="flights.log", encoding="utf-8", level=logging.INFO)
+
+    sql = "CREATE TABLE IF NOT EXISTS flights (registration TEXT, airline TEXT, landing INTEGER, origin_airport TEXT, destination_airport TEXT, time INTEGER, time_on_ground INTEGER, time_in_flight INTEGER, curfew INTEGER, north_fly INTEGER);"
+    CURSOR.execute(sql)
+    CONNECTION.commit()
 
     na_flights = {}
     while True:
         try:
-            flights = fr_api.get_flights(None, na_airport)
+            flights = FlightRadar24API().get_flights(None, NA_AIRPORT_ZONE)
         except:
             flights = []
 
         for flight in flights:
             if flight.id in list(na_flights.keys()):
-                tracking = na_flights[flight.id].check(flight.on_ground, flight.time)
+                tracking = na_flights[flight.id].check(
+                    flight.on_ground, flight.time, flight.heading
+                )
                 if not tracking:
                     na_flights.pop(flight.id)
             else:
                 try:
-                    flight_detail = fr_api.get_flight_details(flight.id)
+                    flight_detail = FlightRadar24API().get_flight_details(flight.id)
                 except:
                     logging.warning(
                         "Avion ignoré par manque d'informations obligatoires"
@@ -127,6 +149,7 @@ def main():
                         try:
                             on_ground = flight.on_ground
                             time = flight.time
+                            heading = flight.heading
                             registration = flight_detail["aircraft"]["registration"]
                         except:
                             logging.warning(
@@ -159,6 +182,7 @@ def main():
                                 airport_origin,
                                 airport_destination,
                                 on_ground,
+                                heading,
                                 time,
                             )
 

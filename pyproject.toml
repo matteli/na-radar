@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Detect aircraft mouvements at Nantes-Atlantique Airport"
 license = "MIT"
 authors = ["matteli <matthieu.nue@gmail.com>"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
