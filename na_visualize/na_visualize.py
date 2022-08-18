@@ -28,23 +28,49 @@ app.layout = html.Div(
                             start_date=START_DATE,
                             display_format="DD/MM/YY",
                             start_date_placeholder_text="DD/MM/YY",
+                            style={
+                                "display": "flex",
+                                "justify-content": "center",
+                            },
                         ),
                     ],
-                    style={"padding": 10},
+                    style={"padding": 10, "flex": 2},
                 ),
                 html.Div(
                     children=[
                         dcc.Dropdown(
-                            options={
-                                "CF": "Couvre-feu",
-                                "ZM": "Zone de mouvement",
-                                "CFTM": "Combo couvre-feu type de mouvement",
-                                "CFZM": "Combo couvre-feu zone de mouvement",
-                            },
+                            options=[
+                                {
+                                    "label": html.Div(
+                                        ["Couvre-feu"], style={"font-size": 19}
+                                    ),
+                                    "value": "CF",
+                                },
+                                {
+                                    "label": html.Div(
+                                        ["Zone de mouvement"], style={"font-size": 19}
+                                    ),
+                                    "value": "ZM",
+                                },
+                                {
+                                    "label": html.Div(
+                                        ["Combo couvre-feu type de mouvement"],
+                                        style={"font-size": 19},
+                                    ),
+                                    "value": "CFTM",
+                                },
+                                {
+                                    "label": html.Div(
+                                        ["Combo couvre-feu zone de mouvement"],
+                                        style={"font-size": 19},
+                                    ),
+                                    "value": "CFZM",
+                                },
+                            ],
                             value="CF",
                             clearable=False,
                             id="type-pick",
-                            style={"height": "100%"},
+                            style={"height": 48, "border-radius": "0px"},
                         ),
                     ],
                     style={"padding": 10, "flex": 3},
@@ -55,7 +81,7 @@ app.layout = html.Div(
                             "Ok",
                             id="ok-button",
                             n_clicks=0,
-                            style={"height": "100%", "width": "100%"},
+                            style={"height": "100%", "width": "100%", "font-size": 19},
                         ),
                     ],
                     style={"padding": 10, "flex": 1},
@@ -63,6 +89,7 @@ app.layout = html.Div(
             ],
             style={
                 "display": "flex",
+                "justify-content": "space-around",
                 "align-items": "stretch",
                 "flex-direction": "row",
             },
