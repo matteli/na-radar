@@ -42,27 +42,27 @@ app.layout = html.Div(
                             options=[
                                 {
                                     "label": html.Div(
-                                        ["Mouvement jour et couvre-feu"],
+                                        ["Plage horaire des mouvements"],
                                         style={"font-size": 19},
                                     ),
                                     "value": "CF",
                                 },
                                 {
                                     "label": html.Div(
-                                        ["Zone de mouvement"], style={"font-size": 19}
+                                        ["Zone des mouvements"], style={"font-size": 19}
                                     ),
                                     "value": "ZM",
                                 },
                                 {
                                     "label": html.Div(
-                                        ["Combo couvre-feu type de mouvement"],
+                                        ["Type des mouvements avec plage horaire"],
                                         style={"font-size": 19},
                                     ),
                                     "value": "CFTM",
                                 },
                                 {
                                     "label": html.Div(
-                                        ["Combo couvre-feu zone de mouvement"],
+                                        ["Zone des mouvements avec plage horaire"],
                                         style={"font-size": 19},
                                     ),
                                     "value": "CFZM",
@@ -161,7 +161,7 @@ def update_graph(n_intervals, n_clicks, start_date, end_date, type_graph):
 
         combo = False
         colors = ["DarkGreen", "DarkRed"]
-        opes_title = "Horaire"
+        opes_title = "Plage horaire"
         opes_label = (
             "Jour",
             "Couvre-feu",
