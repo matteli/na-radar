@@ -75,7 +75,7 @@ app.layout = html.Div(
                             style={"height": 48, "border-radius": "0px"},
                         ),
                     ],
-                    style={"padding": 10, "flex": 3, "min-width": 430},
+                    style={"padding": 10, "flex": 2, "min-width": 250},
                 ),
                 html.Div(
                     children=[
