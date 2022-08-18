@@ -118,7 +118,7 @@ app.layout = html.Div(
                 "flex-direction": "row",
             },
         ),
-        dcc.Graph(id="graph"),
+        dcc.Graph(id="graph", config={"staticPlot": True}),
         dcc.Interval(
             id="interval-component",
             interval=60 * 1000,  # in milliseconds
