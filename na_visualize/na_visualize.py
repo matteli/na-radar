@@ -4,7 +4,7 @@ import pandas as pd
 import sqlite3
 import datetime
 
-START_DATE = datetime.date(2022, 8, 16)
+START_DATE = datetime.date(2022, 8, 18)
 
 app = Dash(__name__, title="NA-Radar")
 application = app.server
