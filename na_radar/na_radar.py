@@ -6,17 +6,17 @@ import argparse
 import logging
 from __init__ import __version__
 
-NA_AIRPORT_ZONE = "47.19,47.11,-1.65,-1.57"
-TRACK_ANGLE_LIMITS = (197, 117)
+AIRPORT_ZONE = "47.19,47.11,-1.65,-1.57"
+TRACK_ANGLE_LIMITS = (297, 117)
 DELAY_DEAD = 600  # time in second without information for untrack plane
 START_CURFEW = datetime.time(0, 0)
 END_CURFEW = datetime.time(6, 0)
 MIDDLE_CURFEW = datetime.time(3, 0)
-CONNECTION = sqlite3.connect("naflights.db")
+CONNECTION = sqlite3.connect("flights.db")
 CURSOR = CONNECTION.cursor()
 
 
-class NAFlight:
+class Flight:
     def __init__(
         self,
         registration,
@@ -64,14 +64,14 @@ class NAFlight:
     def get_north_fly(self, heading, landing):
         if heading > TRACK_ANGLE_LIMITS[0] or heading < TRACK_ANGLE_LIMITS[1]:
             if landing:
-                return 0
+                return 0  # south_fly
             else:
-                return 1
+                return 1  # north_fly
         else:
             if landing:
-                return 1
+                return 1  # north_fly
             else:
-                return 0
+                return 0  # south_fly
 
     def check(self, on_ground, time, heading):
         if on_ground != 0 and on_ground != 1:
@@ -123,20 +123,20 @@ def main():
     CURSOR.execute(sql)
     CONNECTION.commit()
 
-    na_flights = {}
+    airport_flights = {}
     while True:
         try:
-            flights = FlightRadar24API().get_flights(None, NA_AIRPORT_ZONE)
+            flights = FlightRadar24API().get_flights(None, AIRPORT_ZONE)
         except:
             flights = []
 
         for flight in flights:
-            if flight.id in list(na_flights.keys()):
-                tracking = na_flights[flight.id].check(
+            if flight.id in list(airport_flights.keys()):
+                tracking = airport_flights[flight.id].check(
                     flight.on_ground, flight.time, flight.heading
                 )
                 if not tracking:
-                    na_flights.pop(flight.id)
+                    airport_flights.pop(flight.id)
             else:
                 try:
                     flight_detail = FlightRadar24API().get_flight_details(flight.id)
@@ -176,7 +176,7 @@ def main():
                             except:
                                 airport_destination = "N/A"
 
-                            na_flights[flight.id] = NAFlight(
+                            airport_flights[flight.id] = Flight(
                                 registration,
                                 airline_name,
                                 airport_origin,

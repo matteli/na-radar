@@ -148,7 +148,7 @@ def update_graph(n_intervals, n_clicks, start_date, end_date, type_graph):
     else:
         end_time = int(datetime.datetime.today().timestamp()) + 100000
 
-    connection = sqlite3.connect("naflights.db")
+    connection = sqlite3.connect("flights.db")
     cursor = connection.cursor()
 
     if type_graph == "CF":
