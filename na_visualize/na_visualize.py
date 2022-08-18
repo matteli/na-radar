@@ -42,27 +42,27 @@ app.layout = html.Div(
                             options=[
                                 {
                                     "label": html.Div(
-                                        ["Plage horaire des mouvements"],
+                                        ["Horaires"],
                                         style={"font-size": 19},
                                     ),
                                     "value": "CF",
                                 },
                                 {
                                     "label": html.Div(
-                                        ["Zone des mouvements"], style={"font-size": 19}
+                                        ["Zone"], style={"font-size": 19}
                                     ),
                                     "value": "ZM",
                                 },
                                 {
                                     "label": html.Div(
-                                        ["Type des mouvements avec plage horaire"],
+                                        ["Mouvements et horaire"],
                                         style={"font-size": 19},
                                     ),
                                     "value": "CFTM",
                                 },
                                 {
                                     "label": html.Div(
-                                        ["Zone des mouvements avec plage horaire"],
+                                        ["Zone et horaire"],
                                         style={"font-size": 19},
                                     ),
                                     "value": "CFZM",
