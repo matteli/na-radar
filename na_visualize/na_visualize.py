@@ -42,7 +42,8 @@ app.layout = html.Div(
                             options=[
                                 {
                                     "label": html.Div(
-                                        ["Couvre-feu"], style={"font-size": 19}
+                                        ["Mouvement jour et couvre-feu"],
+                                        style={"font-size": 19},
                                     ),
                                     "value": "CF",
                                 },
@@ -162,7 +163,7 @@ def update_graph(n_intervals, n_clicks, start_date, end_date, type_graph):
         colors = ["DarkGreen", "DarkRed"]
         opes_title = "Horaire"
         opes_label = (
-            "Journée",
+            "Jour",
             "Couvre-feu",
         )
 
@@ -194,8 +195,8 @@ def update_graph(n_intervals, n_clicks, start_date, end_date, type_graph):
         colors = ["DarkGreen", "DarkBlue", "DarkRed", "DarkOrange"]
         opes_title = "Mouvement"
         opes_label = (
-            "Décollage",
-            "Atterrissage",
+            "Décollage jour",
+            "Atterrissage jour",
             "Décollage couvre-feu",
             "Atterrissage couvre-feu",
         )
@@ -213,8 +214,8 @@ def update_graph(n_intervals, n_clicks, start_date, end_date, type_graph):
         colors = ["DarkGreen", "DarkBlue", "DarkRed", "DarkOrange"]
         opes_title = "Zone"
         opes_label = (
-            "Sud",
-            "Nord",
+            "Sud jour",
+            "Nord jour",
             "Sud couvre-feu",
             "Nord couvre-feu",
         )
