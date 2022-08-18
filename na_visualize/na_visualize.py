@@ -70,6 +70,7 @@ app.layout = html.Div(
                             ],
                             value="CF",
                             clearable=False,
+                            searchable=False,
                             id="type-pick",
                             style={"height": 48, "border-radius": "0px"},
                         ),
