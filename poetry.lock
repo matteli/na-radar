@@ -405,8 +405,8 @@ docs = ["jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "jaraco.packaging (>=9)
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.9"
-content-hash = "4a7a3a8d81a598797ec5db59295f5e19f6a4d0661015b4fbcec7b347d575b05a"
+python-versions = "^3.8"
+content-hash = "2aacef5e5b9cd937d9d1d0043b44c801a2ded693148e842995ffd13fb77c3c08"
 
 [metadata.files]
 black = []

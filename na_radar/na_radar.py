@@ -105,7 +105,6 @@ class Flight:
             CURSOR.execute(sql)
             CONNECTION.commit()
             logging.info(
-                # print(
                 f"L'avion {self.registration} de la compagnie {self.airline} a {'atteri' if landing else 'décollé'} côté {'nord' if north_fly else 'sud'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')}{' pendant le couvre-feu.' if curfew else '.'}"
             )
 

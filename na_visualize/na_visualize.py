@@ -34,7 +34,7 @@ app.layout = html.Div(
                             },
                         ),
                     ],
-                    style={"padding": 10, "flex": 2},
+                    style={"padding": 10, "flex": 2, "min-width": 306},
                 ),
                 html.Div(
                     children=[
@@ -75,7 +75,7 @@ app.layout = html.Div(
                             style={"height": 48, "border-radius": "0px"},
                         ),
                     ],
-                    style={"padding": 10, "flex": 3},
+                    style={"padding": 10, "flex": 3, "min-width": 450},
                 ),
                 html.Div(
                     children=[
@@ -94,6 +94,7 @@ app.layout = html.Div(
                 "justify-content": "space-around",
                 "align-items": "stretch",
                 "flex-direction": "row",
+                "flex-wrap": "wrap",
             },
         ),
         html.Div(
