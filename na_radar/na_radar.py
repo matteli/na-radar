@@ -6,7 +6,7 @@ import argparse
 import logging
 from __init__ import __version__
 
-NA_AIRPORT_ZONE = "47.3,47,-1.7,-1.5"
+NA_AIRPORT_ZONE = "47.19,47.11,-1.65,-1.57"
 TRACK_ANGLE_LIMITS = (197, 117)
 DELAY_DEAD = 600  # time in second without information for untrack plane
 START_CURFEW = datetime.time(0, 0)
