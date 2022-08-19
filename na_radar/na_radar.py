@@ -144,17 +144,12 @@ class AirportFlight:
             )
             curfew = self.get_curfew(self.time)
 
-            if north_fly != -1:
-                sql = f'INSERT INTO flights VALUES ("{self.registration}", "{self.airline}", {landing}, "{self.origin_airport}", "{self.destination_airport}", {self.time}, {time_on_ground}, {time_in_flight}, {curfew}, {north_fly});'
-                CURSOR.execute(sql)
-                CONNECTION.commit()
-                logging.info(
-                    f"L'avion {self.registration} de la compagnie {self.airline} a {'atteri' if landing else 'décollé'} côté {'nord' if north_fly else 'sud'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')}{' pendant le couvre-feu.' if curfew else '.'}"
-                )
-            else:
-                logging.warning(
-                    f"L'avion {self.registration} de la compagnie {self.airline} a {'atteri' if landing else 'décollé'} d'un côté indéterminé à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')}{' pendant le couvre-feu.' if curfew else '.'} Il n'a pas été comptabilisé."
-                )
+            sql = f'INSERT INTO flights VALUES ("{self.registration}", "{self.airline}", {landing}, "{self.origin_airport}", "{self.destination_airport}", {self.time}, {time_on_ground}, {time_in_flight}, {curfew}, {north_fly});'
+            CURSOR.execute(sql)
+            CONNECTION.commit()
+            logging.info(
+                f"L'avion {self.registration} de la compagnie {self.airline} a {'atteri' if landing else 'décollé'} {'côté nord' if north_fly==1 else 'côté sud' if north_fly==0 else 'un côté indéterminé'} à {datetime.datetime.fromtimestamp(self.time).strftime('%H:%M:%S')}{' pendant le couvre-feu.' if curfew else '.'}"
+            )
             return False
 
         self.time = time

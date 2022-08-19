@@ -173,7 +173,8 @@ def update_graph(n_intervals, n_clicks, start_date, end_date, type_graph):
         sql = f"SELECT airline, \
             SUM(NOT north_fly) AS south_fly, \
             SUM(north_fly) AS north_fly \
-            FROM flights WHERE time>{start_time} AND time<{end_time} \
+            FROM flights \
+            WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
             GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         combo = False
@@ -190,7 +191,8 @@ def update_graph(n_intervals, n_clicks, start_date, end_date, type_graph):
             SUM(landing AND NOT curfew) AS landing, \
             SUM(NOT landing AND curfew) AS takeoff_curfew, \
             SUM(landing AND curfew) AS landing_curfew \
-            FROM flights WHERE time>{start_time} AND time<{end_time} \
+            FROM flights \
+            WHERE time>{start_time} AND time<{end_time} \
             GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         combo = True
@@ -209,7 +211,8 @@ def update_graph(n_intervals, n_clicks, start_date, end_date, type_graph):
             SUM(north_fly AND NOT curfew) AS north, \
             SUM(NOT north_fly AND curfew) AS south_curfew, \
             SUM(north_fly AND curfew) AS north_curfew \
-            FROM flights WHERE time>{start_time} AND time<{end_time} \
+            FROM flights \
+            WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
             GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         combo = True
