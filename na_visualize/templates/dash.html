@@ -1,0 +1,49 @@
+<!doctype html>
+
+<head>
+  <title>NA-Radar</title>
+  <script src="https://unpkg.com/htmx.org@1.8.0"
+    integrity="sha384-cZuAZ+ZbwkNRnrKi05G/fjBX+azI9DNOkNYysZ0I/X5ZFgsmMiBXgDZof30F5ofc"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <h1>
+    NA-Radar
+  </h1>
+  <h3>
+    Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique.
+  </h3>
+  <br />
+  <div>
+    <form>
+      <input type="date" id="start-date" name="start-date" value="2018-07-22" min="2018-01-01" max="2022-12-31" />
+      <input type="date" id="end-date" name="end-date" value="2018-07-22" min="2018-01-01" max="2022-12-31" />
+      <select id="type-graph" name="type-graph">
+        <option value="H" selected>Horaires</option>
+        <option value="Z">Zones</option>
+        <option value="MH">Mouvements et horaires</option>
+        <option value="ZH">Zones et horaires</option>
+      </select>
+      <button type="submit">OK</button>
+    </form>
+  </div>
+  <div id="chart" class="chart"></div>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script type="text/javascript">
+    var bar = [];
+    var airlines = {{ airlines|safe }};
+    var amounts = {{ amounts|safe }};
+    for (let key in amounts)
+    {
+      bar.push ({
+        x: airlines,
+        y: amounts[key],
+        name: key,
+        type: "bar"
+      });
+    };
+    var layout = {barmode: "stack"};
+    Plotly.newPlot("chart", bar, layout);
+  </script>
+</body>
