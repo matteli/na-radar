@@ -8,12 +8,12 @@ from __init__ import __version__
 
 AIRPORT_ZONE = "47.19,47.11,-1.65,-1.57"
 TRACK_ANGLE_LIMITS = (297, 117)
-MAX_ALTITUDE_TESTING_HEADING = 1000  # in feet
-MIN_GROUND_SPEED_TESTING_HEADING = 40  # in knots
-DELAY_DEAD = 600  # time in second without information for untrack plane
 START_CURFEW = datetime.time(0, 0)
 END_CURFEW = datetime.time(6, 0)
 MIDDLE_CURFEW = datetime.time(3, 0)
+MAX_ALTITUDE_TESTING_HEADING = 1000  # in feet
+MIN_GROUND_SPEED_TESTING_HEADING = 40  # in knots
+DELAY_DEAD = 600  # time in second without information for untrack plane
 CONNECTION = sqlite3.connect("flights.db")
 CURSOR = CONNECTION.cursor()
 
