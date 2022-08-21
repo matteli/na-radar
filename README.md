@@ -108,3 +108,7 @@ and after start na-visualize
 ```
 systemctl start na_visualize
 ```
+The website is accessible at
+```
+http://localhost:5000
+```
