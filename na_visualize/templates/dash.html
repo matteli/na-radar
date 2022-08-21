@@ -1,6 +1,7 @@
 <!doctype html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NA-Radar</title>
   <link rel="stylesheet" href='/static/style.css' />
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
@@ -18,11 +19,13 @@
     <div>
       <form id="form" autocomplete="off" action="" onsubmit="handleSubmit(event)">
         <label id="start-date">Début
-          <input class="date-input" type="date" name="start-date" value= "{{ start_date }}" min="{{ start_date }}" max="{{ end_date }}" />
+          <input class="date-input" type="date" name="start-date" value="{{ start_date }}" min="{{ start_date }}"
+            max="{{ end_date }}" />
         </label>
 
         <label id="end-date">Fin
-          <input class="date-input" type="date" name="end-date" value= "{{ end_date }}" min="{{ start_date }}" max="{{ end_date }}" />
+          <input class="date-input" type="date" name="end-date" value="{{ end_date }}" min="{{ start_date }}"
+            max="{{ end_date }}" />
         </label>
 
         <label id="end-date">Graphique
@@ -42,45 +45,45 @@
     <div id="chart" class="chart"></div>
   </main>
   <footer>
-    Ces graphiques ne sont donnés qu'à titre informatif | <a href="https://github.com/matteli/na-radar">Code source sur GitHub</a> | <a href="https://github.com/sponsors/matteli">Sponsor &#9825;</a>
+    Ces graphiques ne sont donnés qu'à titre informatif | <a href="https://github.com/matteli/na-radar">Code source sur
+      GitHub</a> | <a href="https://github.com/sponsors/matteli">Sponsor &#9825;</a>
   </footer>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script type="text/javascript">
-    var airlines = {{ airlines|safe }};
-    var amounts = {{ amounts|safe }};
-    var colors = {{ colors|safe }};
-    var order = {{ order|safe }};
-    var total_amount = {{ total_amount|safe }};
+    var airlines = {{ airlines| safe }};
+    var amounts = {{ amounts| safe }};
+    var colors = {{ colors| safe }};
+    var order = {{ order| safe }};
+    var total_amount = {{ total_amount| safe }};
     draw_graph(airlines, amounts, colors, order, total_amount);
 
     function draw_graph(airlines, amounts, colors, order, total_amount) {
       var bar = [];
-      for (let key in order)
-      {
-        bar.push ({
+      for (let key in order) {
+        bar.push({
           x: airlines,
           y: amounts[order[key]],
           name: order[key] + " (" + total_amount[key] + ")",
           type: "bar",
           text: amounts[order[key]].map(String),
           textposition: 'auto',
-          marker:{
+          marker: {
             color: colors[order[key]]
           }
         });
       };
-      var layout = {barmode: "stack", height: 600, autosize: true};
-      Plotly.newPlot("chart", bar, layout, {staticPlot: true, responsive: true});
+      var layout = { barmode: "stack", height: 600, autosize: true };
+      Plotly.newPlot("chart", bar, layout, { staticPlot: true, responsive: true });
     }
 
     function handleSubmit(event) {
       event.preventDefault();
       fetch("/graph", {
-          method: "POST",
-          body: new FormData(event.srcElement)
+        method: "POST",
+        body: new FormData(event.srcElement)
       })
-      .then(response => response.json())
-      .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"]));
+        .then(response => response.json())
+        .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"]));
     }
   </script>
 </body>
