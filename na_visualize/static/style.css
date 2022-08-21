@@ -29,7 +29,7 @@ h6 {
   height: 58px;
 }
 
-#submit-button:disabled {
+button:disabled {
   background-color: gray;
 }
 
@@ -59,12 +59,6 @@ select {
   border-width: 1px;
   height: 40px;
   font-size: 20px;
-}
-
-.badge {
-  color: white;
-  padding: 10px;
-  text-align: center;
 }
 
 #chart {
