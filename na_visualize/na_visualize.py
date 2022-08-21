@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request
 import sqlite3
 import datetime
 import json
-from time import sleep
 
 START_DATE = "2022-08-19"
 

@@ -72,7 +72,6 @@
         document.getElementById("live-button").classList.remove ("button-released");
         handleSubmit();
         intervalID = setInterval(handleSubmit, 10000);
-
       } else {
         document.getElementById("submit-button").disabled = false;
         document.getElementById("start-date").disabled = false;
@@ -83,7 +82,6 @@
         clearInterval(intervalID);
       }
     }
-
 
     function draw_graph(airlines, amounts, colors, order, total_amount) {
       var bar = [];
