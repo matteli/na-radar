@@ -117,7 +117,6 @@
         "end_date": document.getElementById("end-date").value,
         "type_graph": document.getElementById("graphic-select").value,
       }
-      console.log(data);
       fetch("/graph", {
         method: "POST",
         headers: {
