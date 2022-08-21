@@ -50,11 +50,11 @@
   </footer>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script type="text/javascript">
-    var airlines = {{ airlines| safe }};
-    var amounts = {{ amounts| safe }};
-    var colors = {{ colors| safe }};
-    var order = {{ order| safe }};
-    var total_amount = {{ total_amount| safe }};
+    var airlines = {{ airlines | safe }};
+    var amounts = {{ amounts | safe }};
+    var colors = {{ colors | safe }};
+    var order = {{ order | safe }};
+    var total_amount = {{ total_amount | safe }};
     draw_graph(airlines, amounts, colors, order, total_amount);
 
     function draw_graph(airlines, amounts, colors, order, total_amount) {
