@@ -70,6 +70,7 @@
         document.getElementById("graphic-select").disabled = true;
         document.getElementById("live-button").classList.add ("button-enabled");
         document.getElementById("live-button").classList.remove ("button-released");
+        handleSubmit();
         intervalID = setInterval(handleSubmit, 10000);
 
       } else {
