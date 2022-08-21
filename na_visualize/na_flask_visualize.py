@@ -7,7 +7,6 @@ from time import sleep
 START_DATE = "2022-08-19"
 
 app = Flask(__name__)
-# application = app.server
 
 
 @app.route("/", methods=["GET"])
