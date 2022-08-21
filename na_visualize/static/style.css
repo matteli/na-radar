@@ -11,7 +11,7 @@ h6 {
   color: darkred
 }
 
-#submit-button {
+.button-enabled {
   background-color: darkred;
   color: white;
   border: none;
@@ -19,6 +19,20 @@ h6 {
   margin: 10px;
   height: 58px;
 }
+
+.button-released {
+  background-color: white;
+  color: darkred;
+  border: 2px solid darkred;
+  flex: 1;
+  margin: 10px;
+  height: 58px;
+}
+
+#submit-button:disabled {
+  background-color: gray;
+}
+
 
 label {
   display: flex;

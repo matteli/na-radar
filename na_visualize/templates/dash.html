@@ -36,7 +36,8 @@
             <option value="ZH">Zones et horaires</option>
           </select>
         </label>
-        <button id="submit-button" type="button">OK</button>
+        <button id="submit-button" class="button-enabled" type="button">OK</button>
+        <button id="live-button" class="button-released" type="button">LIVE</button>
       </form>
     </div>
   </header>
@@ -54,9 +55,34 @@
     var colors = {{ colors | safe }};
     var order = {{ order | safe }};
     var total_amount = {{ total_amount | safe }};
+    var live = false;
+    var intervalID;
     draw_graph(airlines, amounts, colors, order, total_amount);
     document.getElementById("submit-button").addEventListener("click", (e) => handleSubmit());
-    const intervalID = setInterval(handleSubmit, 10000);
+    document.getElementById("live-button").addEventListener("click", (e) => handleLive());
+    
+    function handleLive(){
+      live = !live;
+      if (live) {
+        document.getElementById("submit-button").disabled = true;
+        document.getElementById("start-date").disabled = true;
+        document.getElementById("end-date").disabled = true;
+        document.getElementById("graphic-select").disabled = true;
+        document.getElementById("live-button").classList.add ("button-enabled");
+        document.getElementById("live-button").classList.remove ("button-released");
+        intervalID = setInterval(handleSubmit, 10000);
+
+      } else {
+        document.getElementById("submit-button").disabled = false;
+        document.getElementById("start-date").disabled = false;
+        document.getElementById("end-date").disabled = false;
+        document.getElementById("graphic-select").disabled = false;
+        document.getElementById("live-button").classList.add ("button-released");
+        document.getElementById("live-button").classList.remove ("button-enabled");
+        clearInterval(intervalID);
+      }
+    }
+
 
     function draw_graph(airlines, amounts, colors, order, total_amount) {
       var bar = [];
