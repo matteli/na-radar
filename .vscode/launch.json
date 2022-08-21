@@ -28,20 +28,5 @@
         "--no-debugger",
       ],
     },
-    {
-      "name": "NA-Flask-Visualize",
-      "type": "python",
-      "request": "launch",
-      "module": "flask",
-      "env": {
-        "FLASK_APP": "na_visualize.na_flask_visualize.py",
-        "FLASK_ENV": "development",
-        "FLASK_DEBUG": "1"
-      },
-      "args": [
-        "run",
-        "--no-debugger",
-      ],
-    },
   ]
 }
