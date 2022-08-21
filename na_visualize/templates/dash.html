@@ -2,48 +2,85 @@
 
 <head>
   <title>NA-Radar</title>
-  <script src="https://unpkg.com/htmx.org@1.8.0"
-    integrity="sha384-cZuAZ+ZbwkNRnrKi05G/fjBX+azI9DNOkNYysZ0I/X5ZFgsmMiBXgDZof30F5ofc"
-    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href='/static/style.css' />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 </head>
 
 <body>
-  <h1>
-    NA-Radar
-  </h1>
-  <h3>
-    Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique.
-  </h3>
-  <br />
-  <div>
-    <form>
-      <input type="date" id="start-date" name="start-date" value="2018-07-22" min="2018-01-01" max="2022-12-31" />
-      <input type="date" id="end-date" name="end-date" value="2018-07-22" min="2018-01-01" max="2022-12-31" />
-      <select id="type-graph" name="type-graph">
-        <option value="H" selected>Horaires</option>
-        <option value="Z">Zones</option>
-        <option value="MH">Mouvements et horaires</option>
-        <option value="ZH">Zones et horaires</option>
-      </select>
-      <button type="submit">OK</button>
-    </form>
-  </div>
-  <div id="chart" class="chart"></div>
+  <header>
+    <h1>
+      NA-Radar
+    </h1>
+    <h3>
+      Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique.
+    </h3>
+    <br />
+    <div>
+      <form id="form" autocomplete="off" action="" onsubmit="handleSubmit(event)">
+        <label id="start-date">Début
+          <input class="date-input" type="date" name="start-date" value= "{{ start_date }}" min="{{ start_date }}" max="{{ end_date }}" />
+        </label>
+
+        <label id="end-date">Fin
+          <input class="date-input" type="date" name="end-date" value= "{{ end_date }}" min="{{ start_date }}" max="{{ end_date }}" />
+        </label>
+
+        <label id="end-date">Graphique
+          <select name="type-graph">
+            <option value="H" selected>Horaires</option>
+            <option value="Z">Zones</option>
+            <option value="MH">Mouvements et horaires</option>
+            <option value="ZH">Zones et horaires</option>
+          </select>
+        </label>
+
+        <button id="submit-button" type="submit">OK</button>
+      </form>
+    </div>
+  </header>
+  <main>
+    <div id="chart" class="chart"></div>
+  </main>
+  <footer>
+    Ces graphiques ne sont donnés qu'à titre informatif | <a href="https://github.com/matteli/na-radar">Code source sur GitHub</a> | <a href="https://github.com/sponsors/matteli">Sponsor &#9825;</a>
+  </footer>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script type="text/javascript">
-    var bar = [];
     var airlines = {{ airlines|safe }};
     var amounts = {{ amounts|safe }};
-    for (let key in amounts)
-    {
-      bar.push ({
-        x: airlines,
-        y: amounts[key],
-        name: key,
-        type: "bar"
-      });
-    };
-    var layout = {barmode: "stack"};
-    Plotly.newPlot("chart", bar, layout);
+    var colors = {{ colors|safe }};
+    var order = {{ order|safe }};
+    var total_amount = {{ total_amount|safe }};
+    draw_graph(airlines, amounts, colors, order, total_amount);
+
+    function draw_graph(airlines, amounts, colors, order, total_amount) {
+      var bar = [];
+      for (let key in order)
+      {
+        bar.push ({
+          x: airlines,
+          y: amounts[order[key]],
+          name: order[key] + " (" + total_amount[key] + ")",
+          type: "bar",
+          text: amounts[order[key]].map(String),
+          textposition: 'auto',
+          marker:{
+            color: colors[order[key]]
+          }
+        });
+      };
+      var layout = {barmode: "stack", height: 600, autosize: true};
+      Plotly.newPlot("chart", bar, layout, {staticPlot: true, responsive: true});
+    }
+
+    function handleSubmit(event) {
+      event.preventDefault();
+      fetch("/graph", {
+          method: "POST",
+          body: new FormData(event.srcElement)
+      })
+      .then(response => response.json())
+      .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"]));
+    }
   </script>
 </body>

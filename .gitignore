@@ -1,3 +1,4 @@
 *.log
 *.db
 **/__pycache__
+/local_script

@@ -1,21 +1,69 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, Response
 import sqlite3
 import datetime
 import json
+from time import sleep
 
-START_DATE = datetime.date(2022, 8, 19)
+START_DATE = "2022-08-19"
 
 app = Flask(__name__)
 # application = app.server
 
 
-@app.route("/")
-def update_graph(start_date="2022-08-15", end_date="", type_graph="H"):
-    start_time = int(datetime.datetime.fromisoformat(start_date).timestamp())
-    if end_date:
+@app.route("/", methods=["GET"])
+def index():
+    start_date = START_DATE
+    end_date = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+    type_graph = "H"
+    airlines, amounts, total_amount, colors, order = get_data(
+        start_date, end_date, type_graph
+    )
+
+    return render_template(
+        "dash.html",
+        airlines=json.dumps(airlines),
+        amounts=json.dumps(amounts),
+        total_amount=json.dumps(total_amount),
+        colors=json.dumps(colors),
+        order=json.dumps(order),
+        start_date=start_date,
+        end_date=end_date,
+        type_graph=type_graph,
+    )
+
+
+@app.route("/graph", methods=["POST"])
+def update_graph():
+    start_date = request.form.get("start-date")
+    end_date = request.form.get("end-date")
+    type_graph = request.form.get("type-graph")
+
+    airlines, amounts, total_amount, colors, order = get_data(
+        start_date, end_date, type_graph
+    )
+    return {
+        "airlines": airlines,
+        "amounts": amounts,
+        "total_amount": total_amount,
+        "colors": colors,
+        "order": order,
+    }
+
+
+def get_data(start_date, end_date, type_graph):
+    try:
+        start_time = int(datetime.datetime.fromisoformat(start_date).timestamp())
+    except ValueError:
+        start_time = int(datetime.datetime.fromisoformat(START_DATE).timestamp())
+
+    try:
         end_time = int(datetime.datetime.fromisoformat(end_date).timestamp())
-    else:
-        end_time = int(datetime.datetime.today().timestamp()) + 100000
+    except ValueError:
+        end_time = int(
+            datetime.datetime.fromisoformat(
+                (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+            ).timestamp()
+        )
 
     connection = sqlite3.connect("flights.db")
     cursor = connection.cursor()
@@ -28,12 +76,11 @@ def update_graph(start_date="2022-08-15", end_date="", type_graph="H"):
             GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 2
-        colors = ["DarkGreen", "DarkRed"]
-        opes_title = "Plage horaire"
-        opes_label = (
+        colors = {"Jour": "DarkGreen", "Couvre-feu": "DarkRed"}
+        order = [
             "Jour",
             "Couvre-feu",
-        )
+        ]
 
     elif type_graph == "Z":
         sql = f"SELECT airline, \
@@ -44,12 +91,11 @@ def update_graph(start_date="2022-08-15", end_date="", type_graph="H"):
             GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 2
-        colors = ["DarkRed", "DarkOrange"]
-        opes_title = "Zone"
-        opes_label = (
+        colors = {"Sud": "DarkRed", "Nord": "DarkOrange"}
+        order = [
             "Sud",
             "Nord",
-        )
+        ]
 
     elif type_graph == "MH":
         sql = f"SELECT airline, \
@@ -62,14 +108,18 @@ def update_graph(start_date="2022-08-15", end_date="", type_graph="H"):
             GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 4
-        colors = ["DarkGreen", "DarkBlue", "DarkRed", "DarkOrange"]
-        opes_title = "Mouvement"
-        opes_label = (
+        colors = {
+            "Décollage jour": "DarkGreen",
+            "Atterrissage jour": "DarkBlue",
+            "Décollage couvre-feu": "DarkRed",
+            "Atterrissage couvre-feu": "DarkOrange",
+        }
+        order = [
             "Décollage jour",
             "Atterrissage jour",
             "Décollage couvre-feu",
             "Atterrissage couvre-feu",
-        )
+        ]
 
     elif type_graph == "ZH":
         sql = f"SELECT airline, \
@@ -82,43 +132,42 @@ def update_graph(start_date="2022-08-15", end_date="", type_graph="H"):
             GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 4
-        colors = ["DarkGreen", "DarkBlue", "DarkRed", "DarkOrange"]
-        opes_title = "Zone"
-        opes_label = (
+        colors = {
+            "Sud jour": "DarkGreen",
+            "Nord jour": "DarkBlue",
+            "Sud couvre-feu": "DarkRed",
+            "Nord couvre-feu": "DarkOrange",
+        }
+        order = [
             "Sud jour",
             "Nord jour",
             "Sud couvre-feu",
             "Nord couvre-feu",
-        )
+        ]
 
     cursor.execute(sql)
     rows = cursor.fetchall()
     connection.close()
     airlines = []
     amounts = {}
-    total_amout = [0, 0, 0, 0]
+    total_amount = [0, 0, 0, 0]
 
-    for o in opes_label:
+    for o in order:
         amounts[o] = []
 
     for row in rows:
         airlines.append(row[0])
-        amounts[opes_label[0]].append(row[1])
-        amounts[opes_label[1]].append(row[2])
-        total_amout[0] += row[1]
-        total_amout[1] += row[2]
+        amounts[order[0]].append(row[1])
+        amounts[order[1]].append(row[2])
+        total_amount[0] += row[1]
+        total_amount[1] += row[2]
         if nb_bars == 4:
-            amounts[opes_label[0]].append(row[3])
-            amounts[opes_label[0]].append(row[4])
-            total_amout[2] += row[3]
-            total_amout[3] += row[4]
+            amounts[order[2]].append(row[3])
+            amounts[order[3]].append(row[4])
+            total_amount[2] += row[3]
+            total_amount[3] += row[4]
 
-    return render_template(
-        "dash.html",
-        airlines=json.dumps(airlines),
-        amounts=json.dumps(amounts),
-        total_amout=json.dumps(total_amout),
-    )
+    return airlines, amounts, total_amount, colors, order
 
 
 if __name__ == "__main__":

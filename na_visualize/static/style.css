@@ -1,0 +1,86 @@
+body {
+  font-family: sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: darkred
+}
+
+#submit-button {
+  background-color: darkred;
+  color: white;
+  border: none;
+  flex: 1;
+  margin: 10px;
+  height: 58px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  color: gray;
+  margin: 10px;
+  flex: 2;
+  height: 58px;
+}
+
+.date-input {
+  font-size: 20px;
+  height: 36px;
+  border-style: solid;
+  border-color: gray;
+  border-width: 1px;
+}
+
+select {
+  background: white;
+  border-style: solid;
+  border-color: gray;
+  border-width: 1px;
+  height: 40px;
+  font-size: 20px;
+}
+
+.badge {
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+#chart {
+  margin-top: 20px;
+}
+
+#form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  border: 2px solid darkred;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  color: green;
+}
+
+footer {
+  background: darkred;
+  color: white;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
