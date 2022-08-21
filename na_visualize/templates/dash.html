@@ -17,19 +17,19 @@
     </h3>
     <br />
     <div>
-      <form id="form" autocomplete="off" action="" onsubmit="handleSubmit(event)">
-        <label id="start-date">Début
-          <input class="date-input" type="date" name="start-date" value="{{ start_date }}" min="{{ start_date }}"
-            max="{{ end_date }}" />
+      <form id="form" autocomplete="off" action="">
+        <label id="start-date-label">Début
+          <input id="start-date" class="date-input" type="date" name="start-date" value="{{ start_date }}"
+            min="{{ start_date }}" max="{{ end_date }}" />
         </label>
 
-        <label id="end-date">Fin
-          <input class="date-input" type="date" name="end-date" value="{{ end_date }}" min="{{ start_date }}"
-            max="{{ end_date }}" />
+        <label id="end-date-label">Fin
+          <input id="end-date" class="date-input" type="date" name="end-date" value="{{ end_date }}"
+            min="{{ start_date }}" max="{{ end_date }}" />
         </label>
 
-        <label id="end-date">Graphique
-          <select name="type-graph">
+        <label id="graphic-label">Graphique
+          <select id="graphic-select" name="type-graph">
             <option value="H" selected>Horaires</option>
             <option value="Z">Zones</option>
             <option value="MH">Mouvements et horaires</option>
@@ -37,7 +37,7 @@
           </select>
         </label>
 
-        <button id="submit-button" type="submit">OK</button>
+        <button id="submit-button" type="button">OK</button>
       </form>
     </div>
   </header>
@@ -56,6 +56,8 @@
     var order = {{ order | safe }};
     var total_amount = {{ total_amount | safe }};
     draw_graph(airlines, amounts, colors, order, total_amount);
+    document.getElementById("submit-button").addEventListener("click", (e) => handleSubmit());
+    const intervalID = setInterval(handleSubmit, 10000);
 
     function draw_graph(airlines, amounts, colors, order, total_amount) {
       var bar = [];
@@ -85,14 +87,25 @@
       Plotly.newPlot("chart", bar, layout, { staticPlot: true, responsive: true });
     }
 
-    function handleSubmit(event) {
-      event.preventDefault();
+    function handleSubmit() {
+      const data = {
+        "start_date": document.getElementById("start-date").value,
+        "end_date": document.getElementById("end-date").value,
+        "type_graph": document.getElementById("graphic-select").value,
+      }
+      console.log(data);
       fetch("/graph", {
         method: "POST",
-        body: new FormData(event.srcElement)
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       })
         .then(response => response.json())
-        .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"]));
+        .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"]))
+        .catch((error) => {
+          console.error('Error:', error);
+        });
     }
   </script>
 </body>

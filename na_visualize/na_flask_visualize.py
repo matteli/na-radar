@@ -33,9 +33,10 @@ def index():
 
 @app.route("/graph", methods=["POST"])
 def update_graph():
-    start_date = request.form.get("start-date")
-    end_date = request.form.get("end-date")
-    type_graph = request.form.get("type-graph")
+    if request.is_json:
+        start_date = request.json.get("start_date")
+        end_date = request.json.get("end_date")
+        type_graph = request.json.get("type_graph")
 
     airlines, amounts, total_amount, colors, order = get_data(
         start_date, end_date, type_graph
