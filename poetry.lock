@@ -38,7 +38,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "charset-normalizer"
-version = "2.1.0"
+version = "2.1.1"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
 category = "main"
 optional = false
@@ -67,53 +67,6 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
-name = "dash"
-version = "2.6.1"
-description = "A Python framework for building reactive web-apps. Developed by Plotly."
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-dash-core-components = "2.0.0"
-dash-html-components = "2.0.0"
-dash-table = "5.0.0"
-Flask = ">=1.0.4"
-flask-compress = "*"
-plotly = ">=5.0.0"
-
-[package.extras]
-testing = ["cryptography (<3.4)", "waitress (>=1.4.4)", "selenium (>=3.141.0,<=4.2.0)", "requests[security] (>=2.21.0)", "pytest (>=6.0.2)", "percy (>=2.0.2)", "lxml (>=4.6.2)", "beautifulsoup4 (>=4.8.2)"]
-diskcache = ["psutil (>=5.8.0)", "multiprocess (>=0.70.12)", "diskcache (>=5.2.1)"]
-dev = ["PyYAML (>=5.4.1)", "fire (>=0.4.0)", "coloredlogs (>=15.0.1)"]
-ci = ["xlrd (>=2.0.1)", "pandas (>=1.4.0)", "openpyxl", "pyarrow", "orjson (==3.6.7)", "black (==22.3.0)", "xlrd (<2)", "pandas (==1.1.5)", "pyarrow (<3)", "orjson (==3.5.4)", "isort (==4.3.21)", "black (==21.6b0)", "pytest-rerunfailures", "pytest-sugar (==0.9.4)", "pytest-mock", "pylint (==2.13.5)", "preconditions", "numpy", "mock (==4.0.3)", "mimesis", "flask-talisman (==1.0.0)", "flaky (==3.7.0)", "flake8 (==3.9.2)", "dash-dangerously-set-inner-html", "dash-flow-example (==0.0.5)"]
-celery = ["celery[redis] (>=5.1.2)", "redis (>=3.5.3)"]
-
-[[package]]
-name = "dash-core-components"
-version = "2.0.0"
-description = "Core component suite for Dash"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
-name = "dash-html-components"
-version = "2.0.0"
-description = "Vanilla HTML components for Dash"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
-name = "dash-table"
-version = "5.0.0"
-description = "Dash table"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "flask"
 version = "2.2.2"
 description = "A simple framework for building complex web applications."
@@ -131,18 +84,6 @@ Werkzeug = ">=2.2.2"
 [package.extras]
 dotenv = ["python-dotenv"]
 async = ["asgiref (>=3.2)"]
-
-[[package]]
-name = "flask-compress"
-version = "1.12"
-description = "Compress responses in your Flask app with gzip, deflate or brotli."
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-brotli = "*"
-flask = "*"
 
 [[package]]
 name = "flightradarapi"
@@ -233,35 +174,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "numpy"
-version = "1.23.2"
-description = "NumPy is the fundamental package for array computing with Python."
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[[package]]
-name = "pandas"
-version = "1.4.3"
-description = "Powerful data structures for data analysis, time series, and statistics"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-numpy = [
-    {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
-    {version = ">=1.20.0", markers = "platform_machine == \"arm64\" and python_version < \"3.10\""},
-    {version = ">=1.19.2", markers = "platform_machine == \"aarch64\" and python_version < \"3.10\""},
-    {version = ">=1.18.5", markers = "platform_machine != \"aarch64\" and platform_machine != \"arm64\" and python_version < \"3.10\""},
-]
-python-dateutil = ">=2.8.1"
-pytz = ">=2020.1"
-
-[package.extras]
-test = ["pytest-xdist (>=1.31)", "pytest (>=6.0)", "hypothesis (>=5.5.3)"]
-
-[[package]]
 name = "pathspec"
 version = "0.9.0"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -282,36 +194,6 @@ docs = ["furo (>=2021.7.5b38)", "proselint (>=0.10.2)", "sphinx-autodoc-typehint
 test = ["appdirs (==1.4.4)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)", "pytest (>=6)"]
 
 [[package]]
-name = "plotly"
-version = "5.10.0"
-description = "An open-source, interactive data visualization library for Python"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-tenacity = ">=6.2.0"
-
-[[package]]
-name = "python-dateutil"
-version = "2.8.2"
-description = "Extensions to the standard Python datetime module"
-category = "main"
-optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-
-[package.dependencies]
-six = ">=1.5"
-
-[[package]]
-name = "pytz"
-version = "2022.2.1"
-description = "World timezone definitions, modern and historical"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "requests"
 version = "2.28.1"
 description = "Python HTTP for Humans."
@@ -328,25 +210,6 @@ urllib3 = ">=1.21.1,<1.27"
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
-
-[[package]]
-name = "six"
-version = "1.16.0"
-description = "Python 2 and 3 compatibility utilities"
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
-
-[[package]]
-name = "tenacity"
-version = "8.0.1"
-description = "Retry code until it succeeds"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[package.extras]
-doc = ["tornado (>=4.5)", "sphinx", "reno"]
 
 [[package]]
 name = "tomli"
@@ -406,7 +269,7 @@ docs = ["jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "jaraco.packaging (>=9)
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "d33f06a241f3fd96bc893b027bcabb65190aec2deb9f6efd590c9bb31b134d67"
+content-hash = "67848de232ca8fe2c9bc0f87ae215d1dd7ed9fc538c78d19821e1eac494254ff"
 
 [metadata.files]
 black = []
@@ -415,12 +278,7 @@ certifi = []
 charset-normalizer = []
 click = []
 colorama = []
-dash = []
-dash-core-components = []
-dash-html-components = []
-dash-table = []
 flask = []
-flask-compress = []
 flightradarapi = []
 gunicorn = []
 idna = []
@@ -432,16 +290,9 @@ mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
 ]
-numpy = []
-pandas = []
 pathspec = []
 platformdirs = []
-plotly = []
-python-dateutil = []
-pytz = []
 requests = []
-six = []
-tenacity = []
 tomli = []
 typing-extensions = []
 urllib3 = []
