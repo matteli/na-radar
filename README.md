@@ -6,7 +6,7 @@ Introduction
 ------------
 This software is divided into 2 programs:
 - na-radar is the program that detects and tracks airplanes and puts that into a sqlite database.
-- na-flask-visualize is the program that allows you to see the graphics in a browser.
+- na-flask-visualize is the program that allows you to see the charts in a browser.
 
 Installation
 ------------
