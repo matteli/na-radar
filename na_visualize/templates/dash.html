@@ -72,7 +72,7 @@
           }
         });
       };
-      var layout = { barmode: "stack", height: 600, autosize: true };
+      var layout = { barmode: "stack", height: 600, margin: {l:20, r:20, b:20, t:20 }};
       Plotly.newPlot("chart", bar, layout, { staticPlot: true, responsive: true });
     }
 
