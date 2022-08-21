@@ -4,7 +4,6 @@ from time import sleep
 import sqlite3
 import argparse
 import logging
-from __init__ import __version__
 
 AIRPORT_ZONE = "47.19,47.11,-1.65,-1.57"
 TRACK_ANGLE_LIMITS = (297, 117)
@@ -13,6 +12,7 @@ END_CURFEW = datetime.time(6, 0)
 MIDDLE_CURFEW = datetime.time(3, 0)
 MAX_ALTITUDE_TESTING_HEADING = 1000  # in feet
 MIN_GROUND_SPEED_TESTING_HEADING = 40  # in knots
+DELAY_REQUEST = 10  # time in second between each request of FR24
 DELAY_DEAD = 600  # time in second without information for untrack plane
 CONNECTION = sqlite3.connect("flights.db")
 CURSOR = CONNECTION.cursor()
@@ -241,16 +241,8 @@ def main():
                             time,
                         )
 
-        sleep(10)
+        sleep(DELAY_REQUEST)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        prog="NA-Radar", description="Detect planes at NA airport"
-    )
-    parser.add_argument(
-        "-v", "--version", action="version", version="%(prog)s " + __version__
-    )
-
-    args = parser.parse_args()
     main()
