@@ -12,9 +12,9 @@ app = Flask(__name__)
 @app.route("/", methods=["GET"])
 def index():
     start_date = START_DATE
-    end_date = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+    end_date = datetime.date.today().isoformat()
     type_graph = "C"
-    airlines, amounts, total_amount, colors, order = get_data(
+    airlines, amounts, total_amount, colors, order, title = get_data(
         start_date, end_date, type_graph
     )
 
@@ -25,6 +25,7 @@ def index():
         total_amount=json.dumps(total_amount),
         colors=json.dumps(colors),
         order=json.dumps(order),
+        title=title,
         start_date=start_date,
         end_date=end_date,
         type_graph=type_graph,
@@ -53,7 +54,7 @@ def update_graph():
     if r_type_graph.match(type_graph) is None:
         return "Type de graphique inconnu", 400
 
-    airlines, amounts, total_amount, colors, order = get_data(
+    airlines, amounts, total_amount, colors, order, title = get_data(
         start_date, end_date, type_graph
     )
     return {
@@ -62,6 +63,7 @@ def update_graph():
         "total_amount": total_amount,
         "colors": colors,
         "order": order,
+        "title": title,
     }
 
 
@@ -72,7 +74,7 @@ def get_data(start_date, end_date, type_graph):
         start_time = int(datetime.datetime.fromisoformat(START_DATE).timestamp())
 
     try:
-        end_time = int(datetime.datetime.fromisoformat(end_date).timestamp())
+        end_time = int(datetime.datetime.fromisoformat(end_date).timestamp()) + 86400
     except ValueError:
         end_time = int(
             datetime.datetime.fromisoformat(
@@ -95,6 +97,7 @@ def get_data(start_date, end_date, type_graph):
         order = [
             "Couvre-feu",
         ]
+        title = "Nombre de mouvements d'avions par compagnie pendant le couvre-feu (de 0h à 6h)"
 
     elif type_graph == "H":
         sql = f"SELECT airline, \
@@ -110,6 +113,7 @@ def get_data(start_date, end_date, type_graph):
             "Jour",
             "Couvre-feu",
         ]
+        title = "Nombre de mouvements d'avions par compagnie pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
 
     elif type_graph == "Z":
         sql = f"SELECT airline, \
@@ -125,6 +129,7 @@ def get_data(start_date, end_date, type_graph):
             "Sud",
             "Nord",
         ]
+        title = "Nombre de mouvements d'avions par compagnie par le sud ou par le nord"
 
     elif type_graph == "MH":
         sql = f"SELECT airline, \
@@ -149,6 +154,7 @@ def get_data(start_date, end_date, type_graph):
             "Décollage couvre-feu",
             "Atterrissage couvre-feu",
         ]
+        title = "Nombre d'avions par compagnie décollant ou atterrissant pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
 
     elif type_graph == "ZH":
         sql = f"SELECT airline, \
@@ -173,6 +179,7 @@ def get_data(start_date, end_date, type_graph):
             "Sud couvre-feu",
             "Nord couvre-feu",
         ]
+        title = "Nombre de mouvements d'avions par compagnie utilisant l'aéroport par le sud ou par le nord pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
 
     elif type_graph == "MZ":
         sql = f"SELECT airline, \
@@ -197,6 +204,7 @@ def get_data(start_date, end_date, type_graph):
             "Atterrissage sud",
             "Atterrissage nord",
         ]
+        title = "Nombre d'avions par compagnie décollant ou atterrissant par le sud ou par le nord"
 
     cursor.execute(sql)
     rows = cursor.fetchall()
@@ -221,7 +229,7 @@ def get_data(start_date, end_date, type_graph):
             total_amount[2] += row[3]
             total_amount[3] += row[4]
 
-    return airlines, amounts, total_amount, colors, order
+    return airlines, amounts, total_amount, colors, order, title
 
 
 if __name__ == "__main__":

@@ -65,6 +65,10 @@ select {
   font-size: 20px;
 }
 
+#title-graph {
+  text-align: center;
+}
+
 #chart {
   margin-bottom: 150px;
 }
@@ -74,6 +78,7 @@ select {
   flex-wrap: wrap;
   justify-content: space-around;
   border: 2px solid darkred;
+  margin-bottom: 20px;
 }
 
 #help-button {

@@ -30,6 +30,7 @@
       <button id="live-button" class="button-released" type="button">LIVE</button>
     </form>
   </div>
+  <div id="title-graph"> </div>
   <div id="chart" class="chart"></div>
 {% endblock %}
 {% block script %}
@@ -40,9 +41,10 @@
     var colors = {{ colors | safe }};
     var order = {{ order | safe }};
     var total_amount = {{ total_amount | safe }};
+    var title = "{{ title | safe }}";
     var live = false;
     var intervalID;
-    draw_graph(airlines, amounts, colors, order, total_amount);
+    draw_graph(airlines, amounts, colors, order, total_amount, title);
     document.getElementById("submit-button").addEventListener("click", (e) => handleSubmit());
     document.getElementById("live-button").addEventListener("click", (e) => handleLive());
     
@@ -69,7 +71,8 @@
       }
     }
 
-    function draw_graph(airlines, amounts, colors, order, total_amount) {
+    function draw_graph(airlines, amounts, colors, order, total_amount, title) {
+      document.getElementById("title-graph").innerHTML = title;
       var bar = [];
       for (let key in order) {
         bar.push({
@@ -88,7 +91,7 @@
       var layout = {
         barmode: "stack",
         height: 600,
-        margin: { l: 40, r: 40, b: 100, t: 20 },
+        margin: { l: 40, r: 40, b: 100, t: 40 },
         legend: {
           x: 1,
           xanchor: "right",
@@ -112,7 +115,7 @@
         body: JSON.stringify(data),
       })
         .then(response => response.json())
-        .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"]))
+        .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"], data["title"]))
         .catch((error) => {
           console.error("Error:" + error);
         });
