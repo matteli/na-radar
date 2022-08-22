@@ -11,6 +11,10 @@ h6 {
   color: darkred
 }
 
+#title {
+  color: darkred;
+}
+
 .button-enabled {
   background-color: darkred;
   color: white;
@@ -70,6 +74,13 @@ select {
   flex-wrap: wrap;
   justify-content: space-around;
   border: 2px solid darkred;
+}
+
+#help-button {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: darkred;
 }
 
 a {
