@@ -1,0 +1,42 @@
+<!doctype html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Primary Meta Tags -->
+  <title>NA-Radar</title>
+  <meta name="title" content="NA-Radar">
+  <meta name="description" content="Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique. ">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://na-radar.matteli.fr/">
+  <meta property="og:title" content="NA-Radar">
+  <meta property="og:description" content="Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique. ">
+  <meta property="og:image" content="https://na-radar.matteli.fr/media/preview.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://na-radar.matteli.fr/">
+  <meta property="twitter:title" content="NA-Radar">
+  <meta property="twitter:description" content="Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique. ">
+  <meta property="twitter:image" content="https://na-radar.matteli.fr/media/preview.png">
+
+  <link rel="stylesheet" href='/static/style.css' />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+</head>
+
+<body>
+  <h1>
+    NA-Radar
+  </h1>
+  <h3>
+    Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique.
+  </h3>
+  <br />
+  {% block content %}{% endblock %}
+  <footer>
+    Ces graphiques ne sont donnés qu'à titre informatif | <a href="https://github.com/matteli/na-radar">Code source sur
+      GitHub</a> | <a href="https://github.com/sponsors/matteli">Sponsor &#9825;</a>
+  </footer>
+  {% block script %}{% endblock %}
+</body>

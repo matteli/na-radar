@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Les graphiques présentent les conditions de mouvements d'avions pour les dix compagnies les plus représentées :
+  <ul>
+    <li>
+      Le graphique "Horaires" indiquent les avions utilisant l'aéroport pendant le couvre-feu (de 0h à 6h) ou pendant le reste de la journée.
+    </li>
+    <li>
+      Le graphique "Zones" indiquent les avions utilisant l'aéroport par le sud ou par le nord.
+    </li>
+    <li>
+      Le graphique "Mouvements et horaires" indiquent les avions décollant ou atterrissant pendant le couvre-feu (de 0h à 6h) ou pendant le reste de la journée.
+    </li>
+    <li>
+      Le graphique "Zones et horaires" indiquent les avions utilisant l'aéroport par le sud ou par le nord pendant le couvre-feu (de 0h à 6h) ou pendant le reste de la journée.
+    </li>
+  </ul>
+</p>
+<p>
+  Il est possible de filtrer par dates en indiquant le début et la fin de la prise en compte des vols.
+</p>
+<p>
+  Tout changement de date et/ou de type de graphique doit être validé par le boutton OK.
+</p>
+<p>
+  Le boutton LIVE permet de suivre automatiquement l'évolution des graphiques sans avoir besoin de recharger la page.
+</p>
+{% endblock %}

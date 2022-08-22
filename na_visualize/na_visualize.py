@@ -31,6 +31,11 @@ def index():
     )
 
 
+@app.route("/help", methods=["GET"])
+def help():
+    return render_template("help.html")
+
+
 @app.route("/graph", methods=["POST"])
 def update_graph():
     if request.is_json:
