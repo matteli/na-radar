@@ -44,9 +44,9 @@ def update_graph():
         type_graph = request.json.get("type_graph")
 
     r_date = re.compile("^(\d\d\d\d-\d\d-\d\d)$")
-    if r_date.match(start_date) is None:
+    if start_date is not None and r_date.match(start_date) is None:
         return "Mauvais format de date", 400
-    if r_date.match(end_date) is None:
+    if end_date is not None and r_date.match(end_date) is None:
         return "Mauvais format de date", 400
 
     r_type_graph = re.compile("^(C|H|Z|MH|ZH|MZ)$")
