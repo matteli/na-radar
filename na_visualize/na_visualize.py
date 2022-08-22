@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import sqlite3
 import datetime
 import json
+import re
 
 START_DATE = "2022-08-19"
 
@@ -36,6 +37,16 @@ def update_graph():
         start_date = request.json.get("start_date")
         end_date = request.json.get("end_date")
         type_graph = request.json.get("type_graph")
+
+    r_date = re.compile("^(\d\d\d\d-\d\d-\d\d)$")
+    if r_date.match(start_date) is None:
+        return "Mauvais format de date", 400
+    if r_date.match(end_date) is None:
+        return "Mauvais format de date", 400
+
+    r_type_graph = re.compile("^(H|Z|MH|ZH)$")
+    if r_type_graph.match(type_graph) is None:
+        return "Type de graphique inconnu", 400
 
     airlines, amounts, total_amount, colors, order = get_data(
         start_date, end_date, type_graph
