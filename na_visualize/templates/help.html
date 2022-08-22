@@ -1,18 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<p>Les graphiques présentent les conditions de mouvements d'avions pour les dix compagnies les plus représentées :
+<p>Les différents graphiques présentent les conditions de mouvements d'avions pour les dix compagnies les plus représentées :
   <ul>
     <li>
-      Le graphique "Horaires" indiquent les avions utilisant l'aéroport pendant le couvre-feu (de 0h à 6h) ou pendant le reste de la journée.
+      Le graphique "Couvre-feu" indiquent le nombre d'avions par compagnie utilisant l'aéroport pendant le couvre-feu (de 0h à 6h).
     </li>
     <li>
-      Le graphique "Zones" indiquent les avions utilisant l'aéroport par le sud ou par le nord.
+      Le graphique "Horaires" indiquent le nombre d'avions par compagnie utilisant l'aéroport pendant le couvre-feu (de 0h à 6h) ou le reste de la journée.
     </li>
     <li>
-      Le graphique "Mouvements et horaires" indiquent les avions décollant ou atterrissant pendant le couvre-feu (de 0h à 6h) ou pendant le reste de la journée.
+      Le graphique "Zones" indiquent le nombre d'avions par compagnie utilisant l'aéroport par le sud ou par le nord.
     </li>
     <li>
-      Le graphique "Zones et horaires" indiquent les avions utilisant l'aéroport par le sud ou par le nord pendant le couvre-feu (de 0h à 6h) ou pendant le reste de la journée.
+      Le graphique "Mouvements et horaires" indiquent le nombre d'avions par compagnie décollant ou atterrissant pendant le couvre-feu (de 0h à 6h) ou le reste de la journée.
+    </li>
+    <li>
+      Le graphique "Zones et horaires" indiquent le nombre d'avions par compagnie utilisant l'aéroport par le sud ou par le nord pendant le couvre-feu (de 0h à 6h) ou le reste de la journée.
+    </li>
+    <li>
+      Le graphique "Zones et mouvements" indiquent le nombre d'avions par compagnie décollant ou atterrissant par le sud ou par le nord.
     </li>
   </ul>
 </p>
@@ -23,6 +29,6 @@
   Tout changement de date et/ou de type de graphique doit être validé par le boutton OK.
 </p>
 <p>
-  Le boutton LIVE permet de suivre automatiquement l'évolution des graphiques sans avoir besoin de recharger la page.
+  Le boutton LIVE permet de suivre automatiquement l'évolution du graphique sans avoir besoin de recharger la page.
 </p>
 {% endblock %}

@@ -18,10 +18,12 @@
 
       <label id="graphic-label">Graphique
         <select id="graphic-select" name="type-graph">
-          <option value="H" selected>Horaires</option>
+          <option value="C" selected>Couvre-feu</option>
+          <option value="H" >Horaires</option>
           <option value="Z">Zones</option>
           <option value="MH">Mouvements et horaires</option>
           <option value="ZH">Zones et horaires</option>
+          <option value="MZ">Mouvements et zones</option>
         </select>
       </label>
       <button id="submit-button" class="button-enabled" type="button">OK</button>
@@ -77,6 +79,7 @@
           type: "bar",
           text: amounts[order[key]].map(String),
           textposition: "auto",
+          showlegend: true,
           marker: {
             color: colors[order[key]]
           },
@@ -111,7 +114,7 @@
         .then(response => response.json())
         .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"]))
         .catch((error) => {
-          console.error('Error:', error);
+          console.error("Error:" + error);
         });
     }
   </script>

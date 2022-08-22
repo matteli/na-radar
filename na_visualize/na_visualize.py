@@ -13,7 +13,7 @@ app = Flask(__name__)
 def index():
     start_date = START_DATE
     end_date = (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
-    type_graph = "H"
+    type_graph = "C"
     airlines, amounts, total_amount, colors, order = get_data(
         start_date, end_date, type_graph
     )
@@ -49,7 +49,7 @@ def update_graph():
     if r_date.match(end_date) is None:
         return "Mauvais format de date", 400
 
-    r_type_graph = re.compile("^(H|Z|MH|ZH)$")
+    r_type_graph = re.compile("^(C|H|Z|MH|ZH|MZ)$")
     if r_type_graph.match(type_graph) is None:
         return "Type de graphique inconnu", 400
 
@@ -83,11 +83,25 @@ def get_data(start_date, end_date, type_graph):
     connection = sqlite3.connect("flights.db")
     cursor = connection.cursor()
 
-    if type_graph == "H":
+    if type_graph == "C":
+        sql = f"SELECT airline, \
+            SUM(curfew) AS curfew \
+            FROM flights \
+            WHERE time>{start_time} AND time<{end_time} \
+            GROUP BY airline ORDER BY curfew DESC, COUNT(airline) DESC LIMIT 10;"
+
+        nb_bars = 1
+        colors = {"Couvre-feu": "DarkRed"}
+        order = [
+            "Couvre-feu",
+        ]
+
+    elif type_graph == "H":
         sql = f"SELECT airline, \
             SUM(NOT curfew) AS not_curfew, \
             SUM(curfew) AS curfew \
-            FROM flights WHERE time>{start_time} AND time<{end_time} \
+            FROM flights \
+            WHERE time>{start_time} AND time<{end_time} \
             GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 2
@@ -160,6 +174,30 @@ def get_data(start_date, end_date, type_graph):
             "Nord couvre-feu",
         ]
 
+    elif type_graph == "MZ":
+        sql = f"SELECT airline, \
+            SUM(NOT(north_fly OR landing)) AS south_takeoff, \
+            SUM(north_fly AND NOT landing) AS north_takeoff, \
+            SUM(NOT north_fly AND landing) AS south_landing, \
+            SUM(north_fly AND landing) AS north_landing \
+            FROM flights \
+            WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
+            GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
+
+        nb_bars = 4
+        colors = {
+            "Décollage sud": "DarkRed",
+            "Décollage nord": "DarkBlue",
+            "Atterrissage sud": "DarkGreen",
+            "Atterrissage nord": "DarkOrange",
+        }
+        order = [
+            "Décollage sud",
+            "Décollage nord",
+            "Atterrissage sud",
+            "Atterrissage nord",
+        ]
+
     cursor.execute(sql)
     rows = cursor.fetchall()
     connection.close()
@@ -173,10 +211,11 @@ def get_data(start_date, end_date, type_graph):
     for row in rows:
         airlines.append(row[0])
         amounts[order[0]].append(row[1])
-        amounts[order[1]].append(row[2])
         total_amount[0] += row[1]
-        total_amount[1] += row[2]
-        if nb_bars == 4:
+        if nb_bars >= 2:
+            amounts[order[1]].append(row[2])
+            total_amount[1] += row[2]
+        if nb_bars >= 4:
             amounts[order[2]].append(row[3])
             amounts[order[3]].append(row[4])
             total_amount[2] += row[3]
