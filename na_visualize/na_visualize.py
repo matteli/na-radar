@@ -13,7 +13,7 @@ app = Flask(__name__)
 def index():
     start_date = START_DATE
     end_date = datetime.date.today().isoformat()
-    type_graph = "C"
+    type_graph = "CM"
     airlines, amounts, total_amount, colors, order, title = get_data(
         start_date, end_date, type_graph
     )
@@ -50,7 +50,7 @@ def update_graph():
     if end_date != "" and r_date.match(end_date) is None:
         return "Mauvais format de date", 400
 
-    r_type_graph = re.compile("^(C|H|Z|MH|ZH|MZ)$")
+    r_type_graph = re.compile("^(CM|H|Z|MH|ZH|MZ)$")
     if r_type_graph.match(type_graph) is None:
         return "Type de graphique inconnu", 400
 
@@ -85,19 +85,24 @@ def get_data(start_date, end_date, type_graph):
     connection = sqlite3.connect("flights.db")
     cursor = connection.cursor()
 
-    if type_graph == "C":
+    if type_graph == "CM":
         sql = f"SELECT airline, \
-            SUM(curfew) AS curfew \
+            SUM(NOT landing AND curfew) AS takeoff_curfew, \
+            SUM(landing AND curfew) AS landing_curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} \
             GROUP BY airline ORDER BY curfew DESC, COUNT(airline) DESC LIMIT 10;"
 
-        nb_bars = 1
-        colors = {"Couvre-feu": "DarkRed"}
+        nb_bars = 2
+        colors = {
+            "Décollage pendant le couvre-feu": "DarkRed",
+            "Atterrissage pendant le couvre-feu": "DarkOrange",
+        }
         order = [
-            "Couvre-feu",
+            "Décollage pendant le couvre-feu",
+            "Atterrissage pendant le couvre-feu",
         ]
-        title = "Nombre de mouvements d'avions par compagnie pendant le couvre-feu (de 0h à 6h)"
+        title = "Nombre d'avions par compagnie décollant ou atterrissant pendant le couvre-feu (de 0h à 6h)"
 
     elif type_graph == "H":
         sql = f"SELECT airline, \
