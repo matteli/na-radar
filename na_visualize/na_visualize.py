@@ -90,7 +90,7 @@ def get_data(start_date, end_date, type_graph):
             sum(NOT landing AND curfew) AS takeoff_curfew, \
             sum(landing AND curfew) AS landing_curfew \
             FROM flights \
-            WHERE time>{start_time} AND time<{end_time} \
+            WHERE retained_time>{start_time} AND retained_time<{end_time} \
             GROUP BY airline \
             ORDER BY (takeoff_curfew + landing_curfew) DESC, count(airline) DESC LIMIT 10;"
 
@@ -110,7 +110,7 @@ def get_data(start_date, end_date, type_graph):
             sum(NOT curfew) AS not_curfew, \
             sum(curfew) AS curfew \
             FROM flights \
-            WHERE time>{start_time} AND time<{end_time} \
+            WHERE retained_time>{start_time} AND retained_time<{end_time} \
             GROUP BY airline \
             ORDER BY count(airline) DESC LIMIT 10;"
 
@@ -127,7 +127,7 @@ def get_data(start_date, end_date, type_graph):
             sum(NOT north_fly) AS south_fly, \
             sum(north_fly) AS north_fly \
             FROM flights \
-            WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
+            WHERE retained_time>{start_time} AND retained_time<{end_time} AND north_fly>=0 \
             GROUP BY airline \
             ORDER BY count(airline) DESC LIMIT 10;"
 
@@ -146,7 +146,7 @@ def get_data(start_date, end_date, type_graph):
             sum(NOT landing AND curfew) AS takeoff_curfew, \
             sum(landing AND curfew) AS landing_curfew \
             FROM flights \
-            WHERE time>{start_time} AND time<{end_time} \
+            WHERE retained_time>{start_time} AND retained_time<{end_time} \
             GROUP BY airline \
             ORDER BY count(airline) DESC LIMIT 10;"
 
@@ -172,7 +172,7 @@ def get_data(start_date, end_date, type_graph):
             sum(NOT north_fly AND curfew) AS south_curfew, \
             sum(north_fly AND curfew) AS north_curfew \
             FROM flights \
-            WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
+            WHERE retained_time>{start_time} AND retained_time<{end_time} AND north_fly>=0 \
             GROUP BY airline \
             ORDER BY count(airline) DESC LIMIT 10;"
 
@@ -198,7 +198,7 @@ def get_data(start_date, end_date, type_graph):
             sum(NOT north_fly AND landing) AS south_landing, \
             sum(north_fly AND landing) AS north_landing \
             FROM flights \
-            WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
+            WHERE retained_time>{start_time} AND retained_time<{end_time} AND north_fly>=0 \
             GROUP BY airline \
             ORDER BY count(airline) DESC LIMIT 10;"
 
