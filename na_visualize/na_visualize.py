@@ -91,7 +91,7 @@ def get_data(start_date, end_date, type_graph):
             SUM(landing AND curfew) AS landing_curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} \
-            GROUP BY airline ORDER BY curfew DESC, COUNT(airline) DESC LIMIT 10;"
+            GROUP BY airline ORDER BY (takeoff_curfew + landing_curfew) DESC, COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 2
         colors = {
