@@ -91,7 +91,8 @@ def get_data(start_date, end_date, type_graph):
             SUM(landing AND curfew) AS landing_curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} \
-            GROUP BY airline ORDER BY (takeoff_curfew + landing_curfew) DESC, COUNT(airline) DESC LIMIT 10;"
+            GROUP BY airline \
+            ORDER BY (takeoff_curfew + landing_curfew) DESC, COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 2
         colors = {
@@ -110,7 +111,8 @@ def get_data(start_date, end_date, type_graph):
             SUM(curfew) AS curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} \
-            GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
+            GROUP BY airline \
+            ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 2
         colors = {"Jour": "DarkGreen", "Couvre-feu": "DarkRed"}
@@ -126,7 +128,8 @@ def get_data(start_date, end_date, type_graph):
             SUM(north_fly) AS north_fly \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
-            GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
+            GROUP BY airline \
+            ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 2
         colors = {"Sud": "DarkRed", "Nord": "DarkOrange"}
@@ -144,7 +147,8 @@ def get_data(start_date, end_date, type_graph):
             SUM(landing AND curfew) AS landing_curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} \
-            GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
+            GROUP BY airline \
+            ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 4
         colors = {
@@ -169,7 +173,8 @@ def get_data(start_date, end_date, type_graph):
             SUM(north_fly AND curfew) AS north_curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
-            GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
+            GROUP BY airline \
+            ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 4
         colors = {
@@ -184,7 +189,7 @@ def get_data(start_date, end_date, type_graph):
             "Sud couvre-feu",
             "Nord couvre-feu",
         ]
-        title = "Nombre de mouvements d'avions par compagnie utilisant l'aéroport par le sud ou par le nord pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
+        title = "Nombre de mouvements d'avions par compagnie par le sud ou par le nord pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
 
     elif type_graph == "MZ":
         sql = f"SELECT airline, \
@@ -194,7 +199,8 @@ def get_data(start_date, end_date, type_graph):
             SUM(north_fly AND landing) AS north_landing \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
-            GROUP BY airline ORDER BY COUNT(airline) DESC LIMIT 10;"
+            GROUP BY airline \
+            ORDER BY COUNT(airline) DESC LIMIT 10;"
 
         nb_bars = 4
         colors = {

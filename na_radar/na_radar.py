@@ -2,7 +2,6 @@ from FlightRadar24.api import FlightRadar24API
 import datetime
 from time import sleep
 import sqlite3
-import argparse
 import logging
 
 AIRPORT_ZONE = "47.19,47.11,-1.65,-1.57"
