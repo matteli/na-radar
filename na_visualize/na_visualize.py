@@ -87,12 +87,12 @@ def get_data(start_date, end_date, type_graph):
 
     if type_graph == "CM":
         sql = f"SELECT airline, \
-            SUM(NOT landing AND curfew) AS takeoff_curfew, \
-            SUM(landing AND curfew) AS landing_curfew \
+            sum(NOT landing AND curfew) AS takeoff_curfew, \
+            sum(landing AND curfew) AS landing_curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} \
             GROUP BY airline \
-            ORDER BY (takeoff_curfew + landing_curfew) DESC, COUNT(airline) DESC LIMIT 10;"
+            ORDER BY (takeoff_curfew + landing_curfew) DESC, count(airline) DESC LIMIT 10;"
 
         nb_bars = 2
         colors = {
@@ -107,12 +107,12 @@ def get_data(start_date, end_date, type_graph):
 
     elif type_graph == "H":
         sql = f"SELECT airline, \
-            SUM(NOT curfew) AS not_curfew, \
-            SUM(curfew) AS curfew \
+            sum(NOT curfew) AS not_curfew, \
+            sum(curfew) AS curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} \
             GROUP BY airline \
-            ORDER BY COUNT(airline) DESC LIMIT 10;"
+            ORDER BY count(airline) DESC LIMIT 10;"
 
         nb_bars = 2
         colors = {"Jour": "DarkGreen", "Couvre-feu": "DarkRed"}
@@ -124,12 +124,12 @@ def get_data(start_date, end_date, type_graph):
 
     elif type_graph == "Z":
         sql = f"SELECT airline, \
-            SUM(NOT north_fly) AS south_fly, \
-            SUM(north_fly) AS north_fly \
+            sum(NOT north_fly) AS south_fly, \
+            sum(north_fly) AS north_fly \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
             GROUP BY airline \
-            ORDER BY COUNT(airline) DESC LIMIT 10;"
+            ORDER BY count(airline) DESC LIMIT 10;"
 
         nb_bars = 2
         colors = {"Sud": "DarkRed", "Nord": "DarkOrange"}
@@ -141,14 +141,14 @@ def get_data(start_date, end_date, type_graph):
 
     elif type_graph == "MH":
         sql = f"SELECT airline, \
-            SUM(NOT(landing OR curfew)) AS takeoff, \
-            SUM(landing AND NOT curfew) AS landing, \
-            SUM(NOT landing AND curfew) AS takeoff_curfew, \
-            SUM(landing AND curfew) AS landing_curfew \
+            sum(NOT(landing OR curfew)) AS takeoff, \
+            sum(landing AND NOT curfew) AS landing, \
+            sum(NOT landing AND curfew) AS takeoff_curfew, \
+            sum(landing AND curfew) AS landing_curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} \
             GROUP BY airline \
-            ORDER BY COUNT(airline) DESC LIMIT 10;"
+            ORDER BY count(airline) DESC LIMIT 10;"
 
         nb_bars = 4
         colors = {
@@ -167,14 +167,14 @@ def get_data(start_date, end_date, type_graph):
 
     elif type_graph == "ZH":
         sql = f"SELECT airline, \
-            SUM(NOT(north_fly OR curfew)) AS south, \
-            SUM(north_fly AND NOT curfew) AS north, \
-            SUM(NOT north_fly AND curfew) AS south_curfew, \
-            SUM(north_fly AND curfew) AS north_curfew \
+            sum(NOT(north_fly OR curfew)) AS south, \
+            sum(north_fly AND NOT curfew) AS north, \
+            sum(NOT north_fly AND curfew) AS south_curfew, \
+            sum(north_fly AND curfew) AS north_curfew \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
             GROUP BY airline \
-            ORDER BY COUNT(airline) DESC LIMIT 10;"
+            ORDER BY count(airline) DESC LIMIT 10;"
 
         nb_bars = 4
         colors = {
@@ -193,14 +193,14 @@ def get_data(start_date, end_date, type_graph):
 
     elif type_graph == "MZ":
         sql = f"SELECT airline, \
-            SUM(NOT(north_fly OR landing)) AS south_takeoff, \
-            SUM(north_fly AND NOT landing) AS north_takeoff, \
-            SUM(NOT north_fly AND landing) AS south_landing, \
-            SUM(north_fly AND landing) AS north_landing \
+            sum(NOT(north_fly OR landing)) AS south_takeoff, \
+            sum(north_fly AND NOT landing) AS north_takeoff, \
+            sum(NOT north_fly AND landing) AS south_landing, \
+            sum(north_fly AND landing) AS north_landing \
             FROM flights \
             WHERE time>{start_time} AND time<{end_time} AND north_fly>=0 \
             GROUP BY airline \
-            ORDER BY COUNT(airline) DESC LIMIT 10;"
+            ORDER BY count(airline) DESC LIMIT 10;"
 
         nb_bars = 4
         colors = {
