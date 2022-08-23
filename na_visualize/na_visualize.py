@@ -14,7 +14,7 @@ def index():
     start_date = START_DATE
     end_date = datetime.date.today().isoformat()
     type_graph = "CM"
-    airlines, amounts, total_amount, colors, order, title = get_data(
+    airlines, amounts, total_amount, colors, order, title, anchor_legend = get_data(
         start_date, end_date, type_graph
     )
 
@@ -29,6 +29,7 @@ def index():
         start_date=start_date,
         end_date=end_date,
         type_graph=type_graph,
+        anchor_legend=anchor_legend,
     )
 
 
@@ -50,11 +51,11 @@ def update_graph():
     if end_date != "" and r_date.match(end_date) is None:
         return "Mauvais format de date", 400
 
-    r_type_graph = re.compile("^(CM|H|Z|MH|ZH|MZ)$")
+    r_type_graph = re.compile("^(CM|H|Z|MH|MZ)$")
     if r_type_graph.match(type_graph) is None:
         return "Type de graphique inconnu", 400
 
-    airlines, amounts, total_amount, colors, order, title = get_data(
+    airlines, amounts, total_amount, colors, order, title, anchor_legend = get_data(
         start_date, end_date, type_graph
     )
     return {
@@ -64,6 +65,7 @@ def update_graph():
         "colors": colors,
         "order": order,
         "title": title,
+        "anchor_legend": anchor_legend,
     }
 
 
@@ -104,6 +106,7 @@ def get_data(start_date, end_date, type_graph):
             "Atterrissage pendant le couvre-feu",
         ]
         title = "Nombre d'avions par compagnie décollant ou atterrissant pendant le couvre-feu (de 0h à 6h)"
+        anchor_legend = "right"
 
     elif type_graph == "H":
         sql = f"SELECT airline, \
@@ -121,23 +124,7 @@ def get_data(start_date, end_date, type_graph):
             "Couvre-feu",
         ]
         title = "Nombre de mouvements d'avions par compagnie pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
-
-    elif type_graph == "Z":
-        sql = f"SELECT airline, \
-            sum(NOT north_fly) AS south_fly, \
-            sum(north_fly) AS north_fly \
-            FROM flights \
-            WHERE retained_time>{start_time} AND retained_time<{end_time} AND north_fly>=0 \
-            GROUP BY airline \
-            ORDER BY count(airline) DESC LIMIT 10;"
-
-        nb_bars = 2
-        colors = {"Sud": "DarkRed", "Nord": "DarkOrange"}
-        order = [
-            "Sud",
-            "Nord",
-        ]
-        title = "Nombre de mouvements d'avions par compagnie par le sud ou par le nord"
+        anchor_legend = "right"
 
     elif type_graph == "MH":
         sql = f"SELECT airline, \
@@ -164,43 +151,36 @@ def get_data(start_date, end_date, type_graph):
             "Atterrissage couvre-feu",
         ]
         title = "Nombre d'avions par compagnie décollant ou atterrissant pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
+        anchor_legend = "right"
 
-    elif type_graph == "ZH":
-        sql = f"SELECT airline, \
-            sum(NOT(north_fly OR curfew)) AS south, \
-            sum(north_fly AND NOT curfew) AS north, \
-            sum(NOT north_fly AND curfew) AS south_curfew, \
-            sum(north_fly AND curfew) AS north_curfew \
-            FROM flights \
+    elif type_graph == "Z":
+        sql = f"SELECT substr(time(retained_time, 'unixepoch', 'localtime'), 1,2) || ':00' AS hour, \
+	        sum(north_fly) AS north_fly, \
+	        sum(NOT(north_fly)) AS south_fly \
+	        FROM flights \
             WHERE retained_time>{start_time} AND retained_time<{end_time} AND north_fly>=0 \
-            GROUP BY airline \
-            ORDER BY count(airline) DESC LIMIT 10;"
+	        GROUP BY hour \
+            ORDER BY hour;"
 
-        nb_bars = 4
-        colors = {
-            "Sud jour": "DarkGreen",
-            "Nord jour": "DarkBlue",
-            "Sud couvre-feu": "DarkRed",
-            "Nord couvre-feu": "DarkOrange",
-        }
+        nb_bars = 2
+        colors = {"Nord": "DarkOrange", "Sud": "DarkRed"}
         order = [
-            "Sud jour",
-            "Nord jour",
-            "Sud couvre-feu",
-            "Nord couvre-feu",
+            "Nord",
+            "Sud",
         ]
-        title = "Nombre de mouvements d'avions par compagnie par le sud ou par le nord pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
+        title = "Nombre de mouvements d'avions par heure par le sud ou par le nord"
+        anchor_legend = "left"
 
     elif type_graph == "MZ":
-        sql = f"SELECT airline, \
+        sql = f"SELECT substr(time(retained_time, 'unixepoch', 'localtime'), 1,2) || ':00' AS hour, \
             sum(NOT(north_fly OR landing)) AS south_takeoff, \
             sum(north_fly AND NOT landing) AS north_takeoff, \
             sum(NOT north_fly AND landing) AS south_landing, \
             sum(north_fly AND landing) AS north_landing \
             FROM flights \
             WHERE retained_time>{start_time} AND retained_time<{end_time} AND north_fly>=0 \
-            GROUP BY airline \
-            ORDER BY count(airline) DESC LIMIT 10;"
+            GROUP BY hour \
+            ORDER BY hour;"
 
         nb_bars = 4
         colors = {
@@ -215,7 +195,8 @@ def get_data(start_date, end_date, type_graph):
             "Atterrissage sud",
             "Atterrissage nord",
         ]
-        title = "Nombre d'avions par compagnie décollant ou atterrissant par le sud ou par le nord"
+        title = "Nombre d'avions par heure décollant ou atterrissant par le sud ou par le nord"
+        anchor_legend = "left"
 
     cursor.execute(sql)
     rows = cursor.fetchall()
@@ -240,7 +221,7 @@ def get_data(start_date, end_date, type_graph):
             total_amount[2] += row[3]
             total_amount[3] += row[4]
 
-    return airlines, amounts, total_amount, colors, order, title
+    return airlines, amounts, total_amount, colors, order, title, anchor_legend
 
 
 if __name__ == "__main__":
