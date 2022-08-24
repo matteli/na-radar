@@ -186,8 +186,8 @@ def get_data(start_date, end_date, type_graph):
         colors = {
             "Décollage sud": "DarkRed",
             "Atterrissage sud": "DarkOrange",
-            "Décollage nord": "DarkBlue",
-            "Atterrissage nord": "DarkGreen",
+            "Décollage nord": "DarkGreen",
+            "Atterrissage nord": "DarkBlue",
         }
         order = [
             "Décollage sud",
