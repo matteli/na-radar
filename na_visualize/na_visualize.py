@@ -185,14 +185,14 @@ def get_data(start_date, end_date, type_graph):
         nb_bars = 4
         colors = {
             "Décollage sud": "DarkRed",
+            "Atterrissage sud": "DarkOrange",
             "Décollage nord": "DarkBlue",
-            "Atterrissage sud": "DarkGreen",
-            "Atterrissage nord": "DarkOrange",
+            "Atterrissage nord": "DarkGreen",
         }
         order = [
             "Décollage sud",
-            "Décollage nord",
             "Atterrissage sud",
+            "Décollage nord",
             "Atterrissage nord",
         ]
         title = "Nombre d'avions par heure décollant ou atterrissant par le sud ou par le nord"
