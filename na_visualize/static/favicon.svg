@@ -3,14 +3,41 @@
    viewBox="0 -64 640 640"
    version="1.1"
    id="svg11"
+   sodipodi:docname="favicon.svg"
    width="640"
    height="640"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   inkscape:export-filename="favicon.png"
+   inkscape:export-xdpi="27"
+   inkscape:export-ydpi="27"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs15" />
+  <sodipodi:namedview
+     id="namedview13"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.0454684"
+     inkscape:cx="452.42878"
+     inkscape:cy="413.69017"
+     inkscape:window-width="1846"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg11" />
   <!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
   <path
      d="m 320,93.68 v 84.62 l 77.1,44.1 C 350.6,254 320,307.4 320,368 c 0,54.2 24.5,102.7 63.1,134.1 -2.1,6.2 -7.2,9.9 -14,9.9 -0.4,0 -1.7,-0.2 -3,-0.5 L 256,480 145.9,511.5 c -1.3,0.3 -2.6,0.5 -3.9,0.5 -7.7,0 -14,-6.3 -14,-14.9 V 456 c 0,-5.9 2.4,-9.8 6.4,-12.8 L 192,400 V 329.1 L 20.4,378.2 C 10.17,381.1 0,373.4 0,362.8 v -65.5 c 0,-5.8 3.076,-11.1 8.062,-13.9 L 192,178.3 V 93.68 C 192,59.53 221,0 256,0 c 36,0 64,59.53 64,93.68 z M 352,368 c 0,-79.5 64.5,-144 144,-144 79.5,0 144,64.5 144,144 0,79.5 -64.5,144 -144,144 -79.5,0 -144,-64.5 -144,-144 z m 144,96 c 13.3,0 24,-10.7 24,-24 0,-13.3 -10.7,-24 -24,-24 -13.3,0 -24,10.7 -24,24 0,13.3 10.7,24 24,24 z M 479.1,288 v 80 c 0,8.8 8.1,16 16,16 9.7,0 16,-7.2 16,-16 v -80 c 0,-8.8 -6.3,-16 -16,-16 -7.9,0 -16,7.2 -16,16 z"
-     id="path9" />
+     id="path9"
+     style="fill:#8b0000;fill-opacity:1" />
 </svg>
