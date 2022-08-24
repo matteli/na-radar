@@ -155,8 +155,8 @@ def get_data(start_date, end_date, type_graph):
 
     elif type_graph == "Z":
         sql = f"SELECT substr(time(retained_time, 'unixepoch', 'localtime'), 1,2) || ':00' AS hour, \
-	        sum(NOT(north_fly)) AS south_fly \
-	        sum(north_fly) AS north_fly, \
+	        sum(NOT(north_fly)) AS south_fly, \
+	        sum(north_fly) AS north_fly \
 	        FROM flights \
             WHERE retained_time>{start_time} AND retained_time<{end_time} AND north_fly>=0 \
 	        GROUP BY hour \
