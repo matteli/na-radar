@@ -3,7 +3,7 @@
   "short_name": "NA-Radar",
   "icons": [
     {
-      "src": "favicon512.png",
+      "src": "google-touch-icon.png",
       "sizes": "512x512"
     }
   ],
