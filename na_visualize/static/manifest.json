@@ -3,8 +3,16 @@
   "short_name": "NA-Radar",
   "icons": [
     {
-      "src": "google-touch-icon.png",
-      "sizes": "512x512"
+      "src": "favicon512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "background_color": "#ffffff",
