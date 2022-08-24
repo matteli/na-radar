@@ -165,8 +165,8 @@ def get_data(start_date, end_date, type_graph):
         nb_bars = 2
         colors = {"Nord": "DarkOrange", "Sud": "DarkRed"}
         order = [
-            "Nord",
             "Sud",
+            "Nord",
         ]
         title = "Nombre de mouvements d'avions par heure par le sud ou par le nord"
         anchor_legend = "left"
