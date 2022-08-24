@@ -94,7 +94,7 @@ def get_data(start_date, end_date, type_graph):
             FROM flights \
             WHERE retained_time>{start_time} AND retained_time<{end_time} \
             GROUP BY airline \
-            ORDER BY (takeoff_curfew + landing_curfew) DESC, count(airline) DESC LIMIT 10;"
+            ORDER BY (takeoff_curfew + landing_curfew) DESC, count(airline) DESC;"
 
         nb_bars = 2
         colors = {
@@ -107,6 +107,7 @@ def get_data(start_date, end_date, type_graph):
         ]
         title = "Nombre d'avions par compagnie décollant ou atterrissant pendant le couvre-feu (de 0h à 6h)"
         anchor_legend = "right"
+        limit = 10
 
     elif type_graph == "H":
         sql = f"SELECT airline, \
@@ -115,7 +116,7 @@ def get_data(start_date, end_date, type_graph):
             FROM flights \
             WHERE retained_time>{start_time} AND retained_time<{end_time} \
             GROUP BY airline \
-            ORDER BY count(airline) DESC LIMIT 10;"
+            ORDER BY count(airline) DESC;"
 
         nb_bars = 2
         colors = {"Jour": "DarkGreen", "Couvre-feu": "DarkRed"}
@@ -125,6 +126,7 @@ def get_data(start_date, end_date, type_graph):
         ]
         title = "Nombre de mouvements d'avions par compagnie pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
         anchor_legend = "right"
+        limit = 10
 
     elif type_graph == "MH":
         sql = f"SELECT airline, \
@@ -135,7 +137,7 @@ def get_data(start_date, end_date, type_graph):
             FROM flights \
             WHERE retained_time>{start_time} AND retained_time<{end_time} \
             GROUP BY airline \
-            ORDER BY count(airline) DESC LIMIT 10;"
+            ORDER BY count(airline) DESC;"
 
         nb_bars = 4
         colors = {
@@ -152,6 +154,7 @@ def get_data(start_date, end_date, type_graph):
         ]
         title = "Nombre d'avions par compagnie décollant ou atterrissant pendant le couvre-feu (de 0h à 6h) ou le reste de la journée"
         anchor_legend = "right"
+        limit = 10
 
     elif type_graph == "Z":
         sql = f"SELECT substr(time(retained_time, 'unixepoch', 'localtime'), 1,2) || ':00' AS hour, \
@@ -170,6 +173,7 @@ def get_data(start_date, end_date, type_graph):
         ]
         title = "Nombre de mouvements d'avions par heure par le sud ou par le nord"
         anchor_legend = "left"
+        limit = 24
 
     elif type_graph == "MZ":
         sql = f"SELECT substr(time(retained_time, 'unixepoch', 'localtime'), 1,2) || ':00' AS hour, \
@@ -197,6 +201,7 @@ def get_data(start_date, end_date, type_graph):
         ]
         title = "Nombre d'avions par heure décollant ou atterrissant par le sud ou par le nord"
         anchor_legend = "left"
+        limit = 24
 
     cursor.execute(sql)
     rows = cursor.fetchall()
@@ -208,18 +213,28 @@ def get_data(start_date, end_date, type_graph):
     for o in order:
         amounts[o] = []
 
+    i = 0
     for row in rows:
-        airlines.append(row[0])
-        amounts[order[0]].append(row[1])
-        total_amount[0] += row[1]
-        if nb_bars >= 2:
-            amounts[order[1]].append(row[2])
-            total_amount[1] += row[2]
-        if nb_bars >= 4:
-            amounts[order[2]].append(row[3])
-            amounts[order[3]].append(row[4])
-            total_amount[2] += row[3]
-            total_amount[3] += row[4]
+        i += 1
+        if i <= limit:
+            airlines.append(row[0])
+            amounts[order[0]].append(row[1])
+            total_amount[0] += row[1]
+            if nb_bars >= 2:
+                amounts[order[1]].append(row[2])
+                total_amount[1] += row[2]
+            if nb_bars >= 4:
+                amounts[order[2]].append(row[3])
+                amounts[order[3]].append(row[4])
+                total_amount[2] += row[3]
+                total_amount[3] += row[4]
+        else:
+            total_amount[0] += row[1]
+            if nb_bars >= 2:
+                total_amount[1] += row[2]
+            if nb_bars >= 4:
+                total_amount[2] += row[3]
+                total_amount[3] += row[4]
 
     return airlines, amounts, total_amount, colors, order, title, anchor_legend
 
