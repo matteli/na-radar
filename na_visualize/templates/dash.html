@@ -51,7 +51,9 @@
     draw_graph(airlines, amounts, colors, order, total_amount, title, anchor_legend);
     document.getElementById("submit-button").addEventListener("click", (e) => handleSubmit());
     document.getElementById("live-button").addEventListener("click", (e) => handleLive());
-    
+    var plot = document.getElementById("chart");
+    plot.on("plotly_click", (data)=> {console.log(data);});
+
     function handleLive(){
       live = !live;
       if (live) {
@@ -95,6 +97,7 @@
           text: amounts[order[key]].map(String),
           textposition: "auto",
           showlegend: true,
+          hoverinfo: "none",
           marker: {
             color: colors[order[key]]
           },
@@ -110,8 +113,10 @@
           xanchor: anchor_legend,
           y: 1
         },
+        xaxis: {fixedrange: true},
+        yaxis: {fixedrange: true}
       };
-      Plotly.newPlot("chart", bar, layout, { staticPlot: true, responsive: true });
+      Plotly.newPlot("chart", bar, layout, { responsive: true, scrollZoom: false, displayModeBar: false});
     }
 
     function handleSubmit() {
