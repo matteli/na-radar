@@ -65,6 +65,10 @@ select {
   font-size: 20px;
 }
 
+optgroup {
+  font-weight: bold;
+}
+
 #title-graph {
   text-align: center;
 }
