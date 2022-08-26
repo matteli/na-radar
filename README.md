@@ -7,7 +7,7 @@ Introduction
 ------------
 This software is divided into 2 programs:
 - na-radar is the program that detects and tracks airplanes and puts that into a sqlite database.
-- na-flask-visualize is the program that allows you to see the charts in a browser.
+- na-visualize is the program that allows you to see the charts in a browser.
 
 Installation
 ------------
@@ -21,10 +21,10 @@ Copy files
 ```
 git clone https://github.com/matteli/na-radar.git
 ```
-Enter the directory and init the app
+Enter the directory and install the app
 ```
 cd na-radar
-poetry init
+poetry install
 ```
 
 Running
@@ -84,4 +84,17 @@ systemctl start na_visualize
 The website is accessible at
 ```
 http://localhost:5000
+```
+
+Updating
+--------
+In the na-radar directory
+```
+git pull
+poetry install
+```
+Restart the service
+```
+systemctl restart na_radar
+systemctl restart na_visualize
 ```
