@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "NA-Radar"
-version = "0.2.0"
+version = "0.3.0"
 description = "Detect aircraft mouvements at Nantes-Atlantique Airport"
 license = "MIT"
 authors = ["Matthieu Nué <matthieu.nue@gmail.com>"]
