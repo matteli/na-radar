@@ -1,6 +1,7 @@
 NA-Radar
 ========
-NA-Radar is a website that allows you to follow the conditions (area, curfew) of aircraft takeoffs and landings at an airport.
+NA-Radar is a website that allows you to follow the conditions (area, curfew) of aircraft takeoffs and landings at an airport.  
+*NA-Radar uses data from [Flightradar24](https://www.flightradar24.com/). As stated in the [Terms of Service](https://www.flightradar24.com/terms-and-conditions), a [business account](https://www.flightradar24.com/premium?utm_source=website&utm_medium=nav&utm_campaign=menu_subs) is required for any commercial use **or** any public display.*
 
 Introduction
 ------------
