@@ -48,7 +48,7 @@
     var anchor_legend = "{{ anchor_legend | safe }}";
     var live = false;
     var intervalID;
-    draw_graph(airlines, amounts, colors, order, total_amount, title, anchor_legend);
+    drawGraph(airlines, amounts, colors, order, total_amount, title, anchor_legend);
     document.getElementById("submit-button").addEventListener("click", (e) => handleSubmit());
     document.getElementById("live-button").addEventListener("click", (e) => handleLive());
     
@@ -75,7 +75,7 @@
       }
     }
 
-    function get_anchor_legend(anchor_legend) {
+    function getAnchorLegend(anchor_legend) {
       if (anchor_legend == "right") {
         return 1;
       } else {
@@ -83,7 +83,7 @@
       }
     }
 
-    function draw_graph(airlines, amounts, colors, order, total_amount, title, anchor_legend) {
+    function drawGraph(airlines, amounts, colors, order, total_amount, title, anchor_legend) {
       document.getElementById("title-graph").innerHTML = title;
       var bar = [];
       for (let key in order) {
@@ -106,7 +106,7 @@
         height: 500,
         margin: { l: 40, r: 40, b: 100, t: 40 },
         legend: {
-          x: get_anchor_legend(anchor_legend),
+          x: getAnchorLegend(anchor_legend),
           xanchor: anchor_legend,
           y: 1
         },
@@ -128,7 +128,7 @@
         body: JSON.stringify(data),
       })
         .then(response => response.json())
-        .then(data => draw_graph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"], data["title"], data["anchor_legend"]))
+        .then(data => drawGraph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"], data["title"], data["anchor_legend"]))
         .catch((error) => {
           console.error("Error:" + error);
         });

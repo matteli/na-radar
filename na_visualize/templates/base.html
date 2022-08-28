@@ -32,14 +32,14 @@
 
 <body>
   <h1>
-    <a id="title" href="/"><img id="title_icon" src="{{ url_for('static', filename='favicon.svg') }}"
+    <a id="title" href="/"><img id="title-icon" src="{{ url_for('static', filename='favicon.svg') }}"
         alt="na-radar icon" width="48" height="48" /> NA-Radar</a>
   </h1>
   {% block content %}{% endblock %}
   <footer>
     NA-Radar | Ces graphiques ne sont donnés qu'à titre informatif | <a href="https://github.com/matteli/na-radar"> <img
-        id="github_icon" src="{{ url_for('static', filename='GitHub-Mark-Light-32px.png') }}" alt="Source sur Github"
-        width="16" height="16" /> </a> | <a href="https://fr.tipeee.com/na-radar"> <img id="tipeee_icon"
+        id="github-icon" src="{{ url_for('static', filename='GitHub-Mark-Light-32px.png') }}" alt="Source sur Github"
+        width="16" height="16" /> </a> | <a href="https://fr.tipeee.com/na-radar"> <img id="tipeee-icon"
         src="{{ url_for('static', filename='tipeee_tip_btn.png') }}" alt="tip" width="30" height="16" /> </a>
   </footer>
   {% block script %}{% endblock %}
