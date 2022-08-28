@@ -12,7 +12,7 @@ This software is divided into 2 programs:
 Installation
 ------------
 In the followings lines, %user% is the curret user and it is a sudo user.  
-You need some programs and library (python >= 3.8, git, poetry).  
+You need some programs (python >= 3.8, git, poetry).  
 This commands is for debian 11 or ubuntu >= 20.04
 ```
 sudo apt install git
