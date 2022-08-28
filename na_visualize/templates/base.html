@@ -36,7 +36,10 @@
   </h1>
   {% block content %}{% endblock %}
   <footer>
-    NA-Radar | Ces graphiques ne sont donnés qu'à titre informatif | <a href="https://github.com/matteli/na-radar">Code source sur GitHub</a>
+    NA-Radar | Ces graphiques ne sont donnés qu'à titre informatif | <a href="https://github.com/matteli/na-radar"> <img
+        id="github_icon" src="{{ url_for('static', filename='GitHub-Mark-Light-32px.png') }}" alt="Source sur Github"
+        width="16" height="16" /> </a> | <a href="https://fr.tipeee.com/na-radar"> <img id="tipeee_icon"
+        src="{{ url_for('static', filename='tipeee_tip_btn.png') }}" alt="tip" width="30" height="16" /> </a>
   </footer>
   {% block script %}{% endblock %}
 </body>

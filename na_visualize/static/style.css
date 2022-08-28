@@ -69,6 +69,14 @@ optgroup {
   font-weight: bold;
 }
 
+#github_icon {
+  vertical-align: middle;
+}
+
+#tipeee_icon {
+  vertical-align: middle;
+}
+
 #title-graph {
   text-align: center;
 }
