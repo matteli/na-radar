@@ -32,7 +32,8 @@
 
 <body>
   <h1>
-    <a id="title" href="/">NA-Radar</a>
+    <a id="title" href="/"><img id="title_icon" src="{{ url_for('static', filename='favicon.svg') }}"
+        alt="na-radar icon" width="48" height="48" /> NA-Radar</a>
   </h1>
   {% block content %}{% endblock %}
   <footer>

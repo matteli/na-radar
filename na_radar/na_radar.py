@@ -163,7 +163,8 @@ def main():
 
     sql = "CREATE TABLE IF NOT EXISTS flights (registration TEXT, airline TEXT, landing INTEGER, origin_airport TEXT, destination_airport TEXT, retained_time INTEGER, time_on_ground INTEGER, time_in_flight INTEGER, curfew INTEGER, north_fly INTEGER);"
     CURSOR.execute(sql)
-    CONNECTION.commit()
+    sql = "CREATE INDEX index_date ON flights(retained_time);"
+    CURSOR.execute(sql)
 
     airport_flights = {}
     while True:

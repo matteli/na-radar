@@ -77,6 +77,10 @@ optgroup {
   vertical-align: middle;
 }
 
+#title_icon {
+  vertical-align: bottom;
+}
+
 #title-graph {
   text-align: center;
 }
