@@ -23,7 +23,7 @@
   <meta property="twitter:image" content="https://na-radar.matteli.fr/media/preview.png" />
 
   <!--- favicon --->
-  <link rel="stylesheet" href='/static/style.css' />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.svg') }}" />
   <link rel="mask-icon" href="{{ url_for('static', filename='favicon.svg') }}" color="#000000">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
