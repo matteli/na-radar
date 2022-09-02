@@ -4,7 +4,7 @@ import datetime
 import json
 import re
 
-START_DATE = "2022-08-19"
+START_DATE = "2022-09-01"
 
 app = Flask(__name__)
 
