@@ -171,7 +171,9 @@ def main():
         try:
             flights = FlightRadar24API().get_flights(None, AIRPORT_ZONE)
         except:
+            logging.warning("Problème avec l'API FlightRdar24")
             flights = []
+        logging.info(flights)
 
         for flight in flights:
             try:
