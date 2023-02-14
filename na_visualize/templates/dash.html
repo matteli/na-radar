@@ -37,7 +37,7 @@
 <div id="chart" class="chart"></div>
 {% endblock %}
 {% block script %}
-<script src="{{ url_for('static', filename='plotly-2.18.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename='plotly-2.18.1.min.js') }}"></script>
 <script type="text/javascript">
   var airlines = {{ airlines | safe }};
   var amounts = {{ amounts | safe }};
