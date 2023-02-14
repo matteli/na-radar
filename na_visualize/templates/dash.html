@@ -1,137 +1,137 @@
 {% extends "base.html" %}
 {% block content %}
-  <h3>
-    Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique
-    <a id="help-button" href="/help">&nbsp;?&nbsp;</a>
-  </h3>
-  <div>
-    <form id="form" autocomplete="off" action="">
-      <label id="start-date-label">Début
-        <input id="start-date" class="date-input" type="date" name="start-date" value="{{ start_date }}"
-          min="{{ start_date }}" max="{{ end_date }}" />
-      </label>
+<h3>
+  Suivi des mouvements d'avions sur l'aéroport de Nantes-Atlantique
+  <a id="help-button" href="/help">&nbsp;?&nbsp;</a>
+</h3>
+<div>
+  <form id="form" autocomplete="off" action="">
+    <label id="start-date-label">Début
+      <input id="start-date" class="date-input" type="date" name="start-date" value="{{ start_date }}"
+        min="{{ start_date }}" max="{{ end_date }}" />
+    </label>
 
-      <label id="end-date-label">Fin
-        <input id="end-date" class="date-input" type="date" name="end-date" value="{{ end_date }}"
-          min="{{ start_date }}" max="{{ end_date }}" />
-      </label>
+    <label id="end-date-label">Fin
+      <input id="end-date" class="date-input" type="date" name="end-date" value="{{ end_date }}" min="{{ start_date }}"
+        max="{{ end_date }}" />
+    </label>
 
-      <label id="graphic-label">Graphique
-        <select id="graphic-select" name="type-graph">
-          <optgroup label="Compagnies aériennes">
-            <option value="CM" selected>Couvre-feu et mouvements</option>
-            <option value="H" >Plages horaires</option>
-            <option value="MH">Mouvements et plages horaires</option>
-          </optgroup>
-          <optgroup label="Heures">
-            <option value="Z">Zones</option>
-            <option value="MZ">Mouvements et zones</option>
-          </optgroup>
-        </select>
-      </label>
-      <button id="submit-button" class="button-enabled" type="button">OK</button>
-      <button id="live-button" class="button-released" type="button">LIVE</button>
-    </form>
-  </div>
-  <div id="title-graph"> </div>
-  <div id="chart" class="chart"></div>
+    <label id="graphic-label">Graphique
+      <select id="graphic-select" name="type-graph">
+        <optgroup label="Compagnies aériennes">
+          <option value="CM" selected>Couvre-feu et mouvements</option>
+          <option value="H">Plages horaires</option>
+          <option value="MH">Mouvements et plages horaires</option>
+        </optgroup>
+        <optgroup label="Heures">
+          <option value="Z">Zones</option>
+          <option value="MZ">Mouvements et zones</option>
+        </optgroup>
+      </select>
+    </label>
+    <button id="submit-button" class="button-enabled" type="button">OK</button>
+    <button id="live-button" class="button-released" type="button">LIVE</button>
+  </form>
+</div>
+<div id="title-graph"> </div>
+<div id="chart" class="chart"></div>
 {% endblock %}
 {% block script %}
-  <script src="{{ url_for('static', filename='plotly-2.14.0.min.js') }}"></script>
-  <script type="text/javascript">
-    var airlines = {{ airlines | safe }};
-    var amounts = {{ amounts | safe }};
-    var colors = {{ colors | safe }};
-    var order = {{ order | safe }};
-    var total_amount = {{ total_amount | safe }};
-    var title = "{{ title | safe }}";
-    var anchor_legend = "{{ anchor_legend | safe }}";
-    var live = false;
-    var intervalID;
-    drawGraph(airlines, amounts, colors, order, total_amount, title, anchor_legend);
-    document.getElementById("submit-button").addEventListener("click", (e) => handleSubmit());
-    document.getElementById("live-button").addEventListener("click", (e) => handleLive());
-    
-    function handleLive(){
-      live = !live;
-      if (live) {
-        document.getElementById("submit-button").disabled = true;
-        document.getElementById("start-date").disabled = true;
-        document.getElementById("end-date").disabled = true;
-        document.getElementById("end-date").value = "";
-        document.getElementById("graphic-select").disabled = true;
-        document.getElementById("live-button").classList.add ("button-enabled");
-        document.getElementById("live-button").classList.remove ("button-released");
-        handleSubmit();
-        intervalID = setInterval(handleSubmit, 30000);
-      } else {
-        document.getElementById("submit-button").disabled = false;
-        document.getElementById("start-date").disabled = false;
-        document.getElementById("end-date").disabled = false;
-        document.getElementById("graphic-select").disabled = false;
-        document.getElementById("live-button").classList.add ("button-released");
-        document.getElementById("live-button").classList.remove ("button-enabled");
-        clearInterval(intervalID);
-      }
+<script src="{{ url_for('static', filename='plotly-2.18.0.min.js') }}"></script>
+<script type="text/javascript">
+  var airlines = {{ airlines | safe }};
+  var amounts = {{ amounts | safe }};
+  var colors = {{ colors | safe }};
+  var order = {{ order | safe }};
+  var total_amount = {{ total_amount | safe }};
+  var title = "{{ title | safe }}";
+  var anchor_legend = "{{ anchor_legend | safe }}";
+  var live = false;
+  var intervalID;
+  drawGraph(airlines, amounts, colors, order, total_amount, title, anchor_legend);
+  document.getElementById("submit-button").addEventListener("click", (e) => handleSubmit());
+  document.getElementById("live-button").addEventListener("click", (e) => handleLive());
+
+  function handleLive() {
+    live = !live;
+    if (live) {
+      document.getElementById("submit-button").disabled = true;
+      document.getElementById("start-date").disabled = true;
+      document.getElementById("end-date").disabled = true;
+      document.getElementById("end-date").value = "";
+      document.getElementById("graphic-select").disabled = true;
+      document.getElementById("live-button").classList.add("button-enabled");
+      document.getElementById("live-button").classList.remove("button-released");
+      handleSubmit();
+      intervalID = setInterval(handleSubmit, 30000);
+    } else {
+      document.getElementById("submit-button").disabled = false;
+      document.getElementById("start-date").disabled = false;
+      document.getElementById("end-date").disabled = false;
+      document.getElementById("graphic-select").disabled = false;
+      document.getElementById("live-button").classList.add("button-released");
+      document.getElementById("live-button").classList.remove("button-enabled");
+      clearInterval(intervalID);
     }
+  }
 
-    function getAnchorLegend(anchor_legend) {
-      if (anchor_legend == "right") {
-        return 1;
-      } else {
-        return 0;
-      }
+  function getAnchorLegend(anchor_legend) {
+    if (anchor_legend == "right") {
+      return 1;
+    } else {
+      return 0;
     }
+  }
 
-    function drawGraph(airlines, amounts, colors, order, total_amount, title, anchor_legend) {
-      document.getElementById("title-graph").innerHTML = title;
-      var bar = [];
-      for (let key in order) {
-        bar.push({
-          x: airlines,
-          y: amounts[order[key]],
-          name: order[key] + " (" + total_amount[key] + ")",
-          type: "bar",
-          text: amounts[order[key]].map(String),
-          textposition: "auto",
-          showlegend: true,
-          marker: {
-            color: colors[order[key]]
-          },
-        });
-      };
-
-      var layout = {
-        barmode: "stack",
-        height: 500,
-        margin: { l: 40, r: 40, b: 100, t: 40 },
-        legend: {
-          x: getAnchorLegend(anchor_legend),
-          xanchor: anchor_legend,
-          y: 1
+  function drawGraph(airlines, amounts, colors, order, total_amount, title, anchor_legend) {
+    document.getElementById("title-graph").innerHTML = title;
+    var bar = [];
+    for (let key in order) {
+      bar.push({
+        x: airlines,
+        y: amounts[order[key]],
+        name: order[key] + " (" + total_amount[key] + ")",
+        type: "bar",
+        text: amounts[order[key]].map(String),
+        textposition: "auto",
+        showlegend: true,
+        marker: {
+          color: colors[order[key]]
         },
-      };
-      Plotly.newPlot("chart", bar, layout, { staticPlot: true, responsive: true });
-    }
+      });
+    };
 
-    function handleSubmit() {
-      const data = {
-        "start_date": document.getElementById("start-date").value,
-        "end_date": document.getElementById("end-date").value,
-        "type_graph": document.getElementById("graphic-select").value,
-      }
-      fetch("/graph", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-        .then(response => response.json())
-        .then(data => drawGraph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"], data["title"], data["anchor_legend"]))
-        .catch((error) => {
-          console.error("Error:" + error);
-        });
+    var layout = {
+      barmode: "stack",
+      height: 500,
+      margin: { l: 40, r: 40, b: 100, t: 40 },
+      legend: {
+        x: getAnchorLegend(anchor_legend),
+        xanchor: anchor_legend,
+        y: 1
+      },
+    };
+    Plotly.newPlot("chart", bar, layout, { staticPlot: true, responsive: true });
+  }
+
+  function handleSubmit() {
+    const data = {
+      "start_date": document.getElementById("start-date").value,
+      "end_date": document.getElementById("end-date").value,
+      "type_graph": document.getElementById("graphic-select").value,
     }
-  </script>
+    fetch("/graph", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(data => drawGraph(data["airlines"], data["amounts"], data["colors"], data["order"], data["total_amount"], data["title"], data["anchor_legend"]))
+      .catch((error) => {
+        console.error("Error:" + error);
+      });
+  }
+</script>
 {% endblock %}
